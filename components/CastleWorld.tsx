@@ -478,7 +478,7 @@ function ContextHealth({ onError }: Pick<CastleWorldProps, "onError">) {
 class WorldErrorBoundary extends Component<{ children: ReactNode; onError?: (message: string) => void }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch(error: Error, info: ErrorInfo) { console.error("Castle world could not load", error, info.componentStack); this.props.onError?.("The 3D world could not load. You can continue with the complete Lite experience."); }
+  componentDidCatch(error: Error, info: ErrorInfo) { console.error("Castle world could not load", error, info.componentStack); this.props.onError?.("The 3D world could not load."); }
   render() { return this.state.failed ? null : this.props.children; }
 }
 
@@ -488,7 +488,7 @@ export default function CastleWorld({ progressRef, quality, paused, onReady, onE
   useEffect(() => {
     const probe = document.createElement("canvas");
     let context: WebGL2RenderingContext | null = null;
-    try { context = probe.getContext("webgl2"); } catch { /* The complete Lite experience remains available. */ }
+    try { context = probe.getContext("webgl2"); } catch { /* The event posters remain available. */ }
     const available = context !== null;
     context?.getExtension("WEBGL_lose_context")?.loseContext();
     setSupported(available);
@@ -500,7 +500,7 @@ export default function CastleWorld({ progressRef, quality, paused, onReady, onE
   const markReady = useMemo(() => () => { if (!readyCalled.current) { readyCalled.current = true; readyCallback.current(); } }, []);
   if (supported !== true) return null;
   return <WorldErrorBoundary onError={onError}>
-    <Canvas className="castle-canvas" style={{ width: "100%", height: "100%", touchAction: "pan-y" }} dpr={quality === "high" ? [1, 1.5] : 1} frameloop={paused ? "never" : "demand"} camera={{ position: [0, 26, -122], fov: 39, near: 0.055, far: 300 }} gl={{ alpha: true, antialias: quality === "high", powerPreference: quality === "high" ? "high-performance" : "low-power" }} onCreated={({ gl }) => { gl.localClippingEnabled = true; gl.setClearColor("#9ec9dd", 0); }} fallback={<p>The complete event programme is available in Lite view.</p>}>
+    <Canvas className="castle-canvas" style={{ width: "100%", height: "100%", touchAction: "pan-y" }} dpr={quality === "high" ? [1, 1.5] : 1} frameloop={paused ? "never" : "demand"} camera={{ position: [0, 26, -122], fov: 39, near: 0.055, far: 300 }} gl={{ alpha: true, antialias: quality === "high", powerPreference: quality === "high" ? "high-performance" : "low-power" }} onCreated={({ gl }) => { gl.localClippingEnabled = true; gl.setClearColor("#9ec9dd", 0); }} fallback={null}>
       <fog attach="fog" args={["#9ec9dd", 248, 295]} />
       <ambientLight intensity={0.9} color="#e0dcc5" />
       <hemisphereLight args={["#c7ddd7", "#35422e", 1.65]} />

@@ -17,8 +17,7 @@
 }
 .backdrop { z-index: -1; }
 .foreground { z-index: 2; opacity: var(--hero-foreground-opacity, 1); }
-:global(.mode-lite) .foreground { opacity: 1; }
-:global(.mode-cinematic[data-hero-world="entered"]) .composition [data-hero-scenery] { display: none; }
+:global(.world-ready[data-hero-world="entered"]) .composition [data-hero-scenery] { display: none; }
 
 .sky, .clouds, .mountains, .meadow, .valley, .approach, .sunlight, .dust {
   position: absolute;

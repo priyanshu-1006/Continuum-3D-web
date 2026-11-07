@@ -19,6 +19,20 @@
   --room-wash: #efeffb;
 }
 
+.site[data-destination='team'] {
+  --room-accent: #725024;
+  --room-wash: #f6ecd7;
+}
+
+.site[data-destination='team'] .hero {
+  min-height: clamp(360px, 54svh, 590px);
+}
+
+.site[data-destination='team'] .scene img {
+  object-position: 79% 34%;
+  filter: saturate(.8) sepia(.14);
+}
+
 .hero {
   position: relative;
   isolation: isolate;

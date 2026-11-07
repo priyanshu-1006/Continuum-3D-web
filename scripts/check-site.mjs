@@ -34,6 +34,8 @@ const home = await fetch(base);
 assert.equal(home.status, 200);
 const html = await home.text();
 assert.ok(html.includes('Scroll to explore') && html.includes('All events'));
+assert.ok(html.includes('/continuum/layers/castle-opening.webp') && html.includes('/continuum/chrome/unstop-logo.svg'));
+assert.ok(!html.includes('Lite mode'));
 checks.push('Server-rendered home content');
 
 const festival = 'https://unstop.com/college-fests/continuum-madan-mohan-malaviya-university-of-technology-mmmut-gorakhpur-524153';
@@ -49,6 +51,18 @@ for (const [slug, title] of Object.entries(destinations)) {
   if (slug === 'contact') assert.ok(markup.includes(festival), 'Contact links to the official festival');
   checks.push('Shareable destination: ' + slug);
 }
+
+const team = await fetch(new URL('/team', base));
+assert.equal(team.status, 200);
+const roster = await team.text();
+assert.ok(roster.includes('Priyanshu Chaurasia') && roster.includes('Amitesh Vishwakarma'));
+checks.push('Team roster and leadership');
+
+const signIn = await fetch(new URL('/sign-in', base));
+assert.equal(signIn.status, 200);
+const signInMarkup = await signIn.text();
+assert.ok(signInMarkup.includes('Continue with Google') && signInMarkup.includes('Email'));
+checks.push('Google and email sign-in entry points');
 
 const names = { 'neural-nexsus': 'Neural Nexsus', promptx: 'PromptX', nexathon: 'Nexathon', 'redstone-rush': 'RedStone Rush', battleforge: 'Battleforge' };
 const rulebooks = {
@@ -68,7 +82,7 @@ for (const [slug, title] of Object.entries(names)) {
   }
   checks.push(`Shareable event page: ${slug}`);
 }
-for (const slug of [...Object.keys(destinations), 'portal']) {
+for (const slug of Object.keys(destinations)) {
   for (const suffix of ['', '-mobile']) {
     const asset = await fetch(new URL('/continuum/destinations/' + slug + suffix + '.webp', base), { method: 'HEAD' });
     assert.equal(asset.status, 200, slug + suffix);
@@ -76,6 +90,20 @@ for (const slug of [...Object.keys(destinations), 'portal']) {
   }
   checks.push('Desktop and mobile artwork: ' + slug);
 }
+for (const path of [
+  '/continuum/layers/castle-opening.webp',
+  '/continuum/layers/castle-opening-mobile.webp',
+  '/continuum/chrome/continuum-wordmark.webp',
+  '/continuum/destinations/portal.webp',
+  '/continuum/destinations/portal-mobile-v2.webp',
+  '/continuum/destinations/portal-door-left.webp',
+  '/continuum/destinations/portal-door-right.webp',
+]) {
+  const asset = await fetch(new URL(path, base), { method: 'HEAD' });
+  assert.equal(asset.status, 200, path);
+  assert.match(asset.headers.get('content-type') ?? '', /^image\/webp/);
+}
+checks.push('Castle opening, navbar and animated gate artwork');
 for (const path of ['/events/not-a-real-event', '/not-a-real-page']) {
   const response = await fetch(new URL(path, base));
   assert.equal(response.status, 404, path);

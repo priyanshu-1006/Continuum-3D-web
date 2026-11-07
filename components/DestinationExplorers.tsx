@@ -142,11 +142,11 @@ export function ContactDesk() {
             <div aria-live="polite" aria-atomic="true">
               <p className={styles.sectionLabel}>For participants</p>
               <h3>Questions about an event?</h3>
-              <p>Check Unstop for registration and updates. For anything you’re still unsure about, message NEXSUS with the event name and your question.</p>
+              <p>Check Unstop for registration and updates. For anything you’re still unsure about, message Nexsus with the event name and your question.</p>
             </div>
             <div className={styles.actions}>
               <a className={styles.primaryAction} href={officialLinks.festival} target="_blank" rel="noreferrer">Festival on Unstop <span aria-hidden="true">↗</span></a>
-              <a className={styles.secondaryAction} href={officialLinks.instagram} target="_blank" rel="noreferrer">NEXSUS on Instagram <span aria-hidden="true">↗</span></a>
+              <a className={styles.secondaryAction} href={officialLinks.instagram} target="_blank" rel="noreferrer">Nexsus on Instagram <span aria-hidden="true">↗</span></a>
             </div>
           </>
         )}
@@ -154,12 +154,12 @@ export function ContactDesk() {
           <>
             <div aria-live="polite" aria-atomic="true">
               <p className={styles.sectionLabel}>For prospective partners</p>
-              <h3>Start a conversation with NEXSUS</h3>
+              <h3>Start a conversation with Nexsus</h3>
               <p>Include your organisation’s name and what you’d like to contribute. You can also tell us which event you’re interested in supporting.</p>
             </div>
             <div className={styles.actions}>
-              <a className={styles.primaryAction} href={nexsusLinkedIn} target="_blank" rel="noreferrer">NEXSUS on LinkedIn <span aria-hidden="true">↗</span></a>
-              <a className={styles.secondaryAction} href={officialLinks.instagram} target="_blank" rel="noreferrer">NEXSUS on Instagram <span aria-hidden="true">↗</span></a>
+              <a className={styles.primaryAction} href={nexsusLinkedIn} target="_blank" rel="noreferrer">Nexsus on LinkedIn <span aria-hidden="true">↗</span></a>
+              <a className={styles.secondaryAction} href={officialLinks.instagram} target="_blank" rel="noreferrer">Nexsus on Instagram <span aria-hidden="true">↗</span></a>
             </div>
           </>
         )}

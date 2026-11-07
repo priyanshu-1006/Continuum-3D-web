@@ -32,7 +32,7 @@ export type Event = {
 
 export const officialLinks = {
   instagram: "https://www.instagram.com/nexsus.mmmut/",
-  university: "https://www.mmmut.app/",
+  nexsus: "https://nexsus.mmmut.app/",
   festival: "https://unstop.com/college-fests/continuum-madan-mohan-malaviya-university-of-technology-mmmut-gorakhpur-524153",
 } as const;
 

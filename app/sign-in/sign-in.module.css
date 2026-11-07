@@ -1,0 +1,234 @@
+.page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 108px 28px 54px;
+  color: #2c221b;
+  background: #181821;
+}
+
+.scene {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #1c1319c4 0%, #1c131941 58%, #161019ae),
+    url('/continuum/destinations/portal.webp') center / cover;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 450px);
+  align-items: center;
+  gap: clamp(28px, 6vw, 94px);
+  width: min(100%, 1070px);
+}
+
+.intro {
+  color: #fff4dd;
+  text-shadow: 0 2px 15px #140c10;
+}
+
+.eyebrow,
+.cardKicker {
+  margin: 0 0 8px;
+  color: #f9cc8b;
+  font-size: 0.75rem;
+  font-weight: 760;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sceneTitle {
+  margin: 0 0 12px;
+  font: 610 clamp(2.65rem, 6vw, 5rem)/1.03 var(--font-display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.sceneCopy {
+  max-width: 26ch;
+  margin: 0;
+  font-size: clamp(1.02rem, 2vw, 1.3rem);
+  line-height: 1.45;
+}
+
+.card {
+  min-width: 0;
+  padding: clamp(22px, 4vw, 42px);
+  border: 1px solid #f5e1b6;
+  border-radius: 27px;
+  background: linear-gradient(165deg, #fff8e9, #efe0c7);
+  box-shadow: 0 25px 70px #170f17a6, inset 0 1px 0 #ffffff;
+}
+
+.cardKicker { color: #79522b; }
+
+.card h1 {
+  margin: 0;
+  font: 610 clamp(2.15rem, 4.25vw, 3.5rem)/1.05 var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+.cardCopy,
+.signedIn {
+  margin: 10px 0 22px;
+  color: #574434;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.alert {
+  margin: 12px 0 18px;
+  padding: 10px 13px;
+  border: 1px solid #d4b67b;
+  border-radius: 10px;
+  color: #64441f;
+  background: #fff0cf;
+  font-size: 0.91rem;
+  line-height: 1.45;
+}
+
+.googleButton,
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 15px;
+  border: 1px solid #8c6a47;
+  border-radius: 11px;
+  font: 700 0.93rem/1.3 var(--font-body);
+  text-align: center;
+  text-decoration: none;
+}
+
+.googleButton {
+  color: #1f1f1f;
+  border-color: #b8b1a8;
+  background: #fff;
+}
+
+.googleButton:hover:not(:disabled) { background: #f3eee8; }
+
+.primary {
+  color: #fff8eb;
+  border-color: #614126;
+  background: #785232;
+  box-shadow: inset 0 1px #ab8256;
+}
+
+.primary:hover:not(:disabled) { background: #694327; }
+
+.methods :disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 16px 0;
+  color: #6a5540;
+  font-size: 0.84rem;
+}
+
+.divider::before,
+.divider::after {
+  flex: 1;
+  height: 1px;
+  background: #cbb394;
+  content: '';
+}
+
+.fieldset {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset label { font-size: 0.9rem; font-weight: 720; }
+
+.fieldset input:not([type='hidden']) {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #b69a76;
+  border-radius: 9px;
+  color: #332318;
+  background: #fffbf2;
+  font: 500 1rem/1.4 var(--font-body);
+}
+
+.fieldset input::placeholder { color: #746252; }
+
+.fieldset .codeInput {
+  text-align: center;
+  letter-spacing: 0.36em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sentTo {
+  margin: 0 0 3px;
+  color: #574434;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.codeOptions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 14px;
+}
+
+.codeOptions button,
+.exit {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  color: #624126;
+  background: transparent;
+  font: 690 0.88rem/1.4 var(--font-body);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.status {
+  min-height: 1.35em;
+  margin: 8px 0 0;
+  color: #4a593b;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.status[data-error='true'] { color: #8f352a; }
+
+.page :is(a, button, input):focus-visible {
+  outline: 3px solid #9a642f;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .page { padding: 98px 16px 34px; }
+  .scene {
+    background:
+      linear-gradient(180deg, #17111c78 12%, #181019d9 75%),
+      url('/continuum/destinations/portal-mobile-v2.webp') center top / cover;
+  }
+  .layout { grid-template-columns: 1fr; gap: 22px; width: min(100%, 430px); }
+  .sceneTitle { font-size: clamp(2rem, 8vw, 3.1rem); }
+  .sceneCopy { font-size: 1rem; }
+}
+.page h1[tabindex='-1']:focus { outline: none; }

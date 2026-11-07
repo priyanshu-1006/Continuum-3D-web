@@ -116,7 +116,7 @@ export default function HeroEnvironment({ children, motion }: { children: ReactN
 
       <div className={styles.foreground} data-hero-scenery>
         <div className={styles.approach}>
-          <Layer name="path" className={styles.path} />
+          <Layer name="path" className={styles.path} priority />
           <i className={styles.leftLantern} /><i className={styles.rightLantern} />
         </div>
         <img className={styles.leftTree} src="/continuum/layers/forest-left-mobile.webp" width="520" height="523" alt="" decoding="async" />

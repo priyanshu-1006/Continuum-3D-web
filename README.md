@@ -1,10 +1,10 @@
 # CONTINUUM 2027
 
-A responsive event website built with the Next.js 16 App Router, React, TypeScript, React Three Fiber, Three.js, and GSAP. The opening frames the live castle beneath the stone-and-gold CONTINUUM 2027 title. Scrolling brings the camera down behind an original voxel guide, then moves the guide through both castle gates to five noticeboards. The minimap tracks the guide and links to each stop.
+A responsive event website built with the Next.js 16 App Router, React, TypeScript, React Three Fiber, Three.js, and GSAP. The opening frames an illustrated castle beneath the stone-and-gold CONTINUUM 2027 title. Scrolling brings the camera down behind an original voxel guide, then moves the guide through both castle gates to five noticeboards. The minimap tracks the guide and links to each stop.
 
 ## Run locally
 
-Use Node.js 20.9 or newer and npm.
+Use Node.js 22 or newer and npm.
 
 ```sh
 npm ci
@@ -20,7 +20,7 @@ npm start
 
 Run the bundled asset integrity checks with `npm test`, and TypeScript checks with `npm run typecheck`.
 
-The compiled site uses a Node.js server. The castle is served by `/api/castle`, which selects the bundled gzip representation when the client accepts gzip. The full GLB remains available at `/assets/models/castle.glb`. Meshopt decoding is required and is configured by the 3D scene. A raster fallback remains visible while the model loads or when 3D is unavailable. Reduced-motion preferences are respected.
+The compiled site uses a Node.js server. The opening castle is an illustrated cutout. Scrolling starts the 3D scene and blends it into the opening once it is ready. The castle is served by `/api/castle`, which selects the bundled gzip representation when the client accepts gzip. The full GLB remains available at `/assets/models/castle.glb`. Meshopt decoding is configured by the 3D scene. The event posters remain usable when WebGL is unavailable.
 
 ## Assets
 
@@ -58,11 +58,13 @@ The dialog, tab navigation, and world settings live in `components/EventModal.ts
 
 Registration buttons open the event's Unstop page. Neural Nexsus and Battleforge display a pending state until their confirmed registration links are available. Update event content and destinations in `lib/events.ts`.
 
-Scroll or use the page navigation keys to follow the guide. At a stop, click the artwork, press E, or choose Open poster. The map is open on desktop and expands from the Castle map button on mobile. Lite mode opens a static gallery with the same event pages. The route and stops are configured in `lib/journey.ts`.
+Scroll or use the page navigation keys to follow the guide. At a stop, click the artwork, press E, or choose Open poster. The map is open on desktop and expands from the Castle map button on mobile. The route and stops are configured in `lib/journey.ts`.
 
 Keep the credits and asset notices with any distributed copy. Publication and hosting are separate from this local implementation.
 
 ## Verification and hosting
+
+To activate Google and email-code sign-in, follow the [authentication setup](docs/authentication.md).
 
 Run npm run test:http while the local site is running to check same-origin compressed model delivery, direct event pages, and genuine 404 responses. Next 16.4 filters Content-Encoding from route-handler responses, so /api/castle redirects gzip-capable clients to a statically served .glb.gz with explicit configured headers. Version queries are preserved to prevent stale model representations.
 
@@ -72,8 +74,10 @@ Set NEXT_PUBLIC_SITE_URL to your final public origin before deploying so social 
 ## Castle destinations
 
 - `/sponsors` has three ways to partner; add the sponsor roster only when the organizer confirms names and supplies approved logos.
-- `/about` introduces NEXSUS and links five festival paths to shareable event pages.
+- `/about` introduces Nexsus, the faculty directory, and five festival paths.
+- `/team` lists the student leadership and published team roster.
 - `/contact` has organizer channels, directions, and an official registration and rulebook directory. Use `/contact#partnerships` for sponsor inquiries.
-- The castle portal runs for at least 2.1 seconds on full internal page changes, including when the destination is already cached. Hash jumps and in-castle event dialogs remain immediate. Lite and reduced-motion visitors get a static portal.
+- The castle gate unlatches, opens, and reveals the next destination over at least 2.1 seconds. Hash jumps and in-castle event dialogs remain immediate. Reduced-motion visitors get a static gate view.
 - [Destination artwork and prompts](docs/destination-art.md)
+- [Castle opening and gate artwork](docs/gate-art.md)
 

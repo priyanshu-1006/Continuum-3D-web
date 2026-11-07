@@ -9,14 +9,13 @@ const destinations = [
   { label: 'Events', href: '/#events', stop: 6, room: 'Quest Hall' },
   { label: 'Sponsors', href: '/sponsors', room: 'Guild Hall' },
   { label: 'About', href: '/about', room: 'Founders’ Archive' },
+  { label: 'Team', href: '/team', room: 'Meet Nexsus' },
   { label: 'Contact', href: '/contact', room: 'Dispatch Tower' },
 ] as const;
 
 type JourneyNav = {
   active: number;
-  mode: 'cinematic' | 'lite';
   navigate: (stop: number) => void;
-  toggleMode: () => void;
 };
 
 export default function SiteNav({ journey }: { journey?: JourneyNav }) {
@@ -36,7 +35,7 @@ export default function SiteNav({ journey }: { journey?: JourneyNav }) {
       setOpen(false);
       toggleRef.current?.focus();
     };
-    const desktop = window.matchMedia('(min-width: 722px)');
+    const desktop = window.matchMedia('(min-width: 811px)');
     const dismissOnDesktop = () => { if (desktop.matches) setOpen(false); };
     document.addEventListener('pointerdown', dismissOutside);
     document.addEventListener('keydown', dismissWithEscape);
@@ -59,10 +58,10 @@ export default function SiteNav({ journey }: { journey?: JourneyNav }) {
   }
 
   return (
-    <header ref={navRef} className={'glass-nav site-nav' + (open ? ' site-nav--open' : '') + (journey ? ' site-nav--journey' : '')}>
+    <header ref={navRef} className={'glass-nav site-nav' + (open ? ' site-nav--open' : '')}>
       <Link className="nav-brand" href={journey ? '#arrival' : '/#arrival'} aria-label="CONTINUUM 2027 home" onClick={event => follow(event, 0)}>
-        <img className="nav-emblem" src="/continuum/layers/official-icon.png" alt="" width="128" height="128" />
-        <span>CONTINUUM <small>2027</small></span>
+        <img className="nav-wordmark" src="/continuum/chrome/continuum-wordmark.webp" alt="Continuum" width="480" height="69" />
+        <small aria-hidden="true">2027</small>
       </Link>
       <nav className="site-nav-links" id={menuId} aria-label="Main navigation">
         {destinations.map(item => {
@@ -78,11 +77,7 @@ export default function SiteNav({ journey }: { journey?: JourneyNav }) {
         })}
       </nav>
       <div className="site-nav-controls">
-        {journey && (
-          <button className="nav-mode" type="button" onClick={journey.toggleMode} title={journey.mode === 'cinematic' ? 'Switch to Lite view' : 'Enable the 3D castle'}>
-            <i aria-hidden="true" />{journey.mode === 'cinematic' ? 'Lite mode' : 'Enable 3D'}
-          </button>
-        )}
+        <Link className="nav-sign-in" href="/sign-in" aria-current={path === '/sign-in' ? 'page' : undefined} onClick={event => follow(event)}>Sign in <span aria-hidden="true">↗</span></Link>
         <button ref={toggleRef} className="site-nav-menu" type="button" aria-expanded={open} aria-controls={menuId} onClick={() => setOpen(value => !value)}>
           <span className="site-nav-menu-icon" aria-hidden="true"><i /><i /><i /></span>
           {open ? 'Close' : 'Menu'}

@@ -14,24 +14,46 @@
   overflow: hidden;
   background: linear-gradient(180deg, #a4cce3, #d6e9ea 65%, #b1bd85);
 }
-.castle-canvas { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; touch-action: pan-y; }
-.castle-canvas canvas { touch-action: pan-y; }
-.castle-fallback {
-  --fallback-width: min(68vw, 60svh);
-  position: absolute;
-  left: 50%;
-  /* Match the gate floor in the cropped raster to the live camera's 67.5% anchor. */
-  bottom: calc(32.5% - var(--fallback-width) * .028);
-  width: var(--fallback-width);
-  height: auto;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: translateX(-50%);
-  pointer-events: none;
-  opacity: var(--hero-foreground-opacity, 1);
-  transition: opacity .35s;
+.castle-canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: pan-y;
+  opacity: var(--hero-world-opacity, 0);
+  transition: opacity .24s ease-out;
 }
-.mode-cinematic.world-ready .castle-fallback { opacity: 0; }
+.castle-canvas canvas { touch-action: pan-y; }
+.journey[data-hero-world="opening"] .castle-canvas { filter: brightness(var(--hero-world-brightness, 1)); }
+.castle-opening {
+  --opening-width: min(78vw, 68svh);
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: calc(32.5% - var(--opening-width) * .014);
+  width: var(--opening-width);
+  pointer-events: none;
+  opacity: calc(1 - var(--hero-world-opacity, 0));
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) scale(calc(1 + var(--hero-intro, 0) * .16));
+  transition: opacity .24s ease-out;
+}
+.castle-opening img { width: 100%; height: auto; }
+.world-loading-notice {
+  display: none;
+  position: fixed;
+  z-index: 33;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: #fff4df;
+  background: #231a14e8;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.world-loading[data-arrival-loading="true"] .world-loading-notice { display: block; }
 .scene-vignette {
   position: absolute;
   inset: 0;
@@ -67,7 +89,7 @@
 .glass-nav nav { display: flex; align-items: center; gap: 4px; }
 .glass-nav nav a { padding: 10px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 .glass-nav nav a:hover { background: rgba(255, 255, 255, .65); }
-.nav-mode {
+.nav-sign-in {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -78,11 +100,9 @@
   min-height: 40px;
   padding: 0 12px;
   white-space: nowrap;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 750;
 }
-.nav-mode i { width: 7px; height: 7px; border-radius: 50%; background: #758d3d; }
-.mode-lite .nav-mode i { background: #bd8b47; }
 .castle-hero { height: 142svh; }
 .hero-frame { position: sticky; top: 0; height: 100svh; opacity: var(--hero-fade); }
 .hero-title {
@@ -114,7 +134,7 @@
 .poster-stop { height: 152svh; position: relative; }
 .static-poster { display: block; position: sticky; top: 18svh; width: min(73vw, 950px); margin-inline: auto; pointer-events: auto; }
 .static-poster img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 18px 50px #392e2640; }
-.mode-cinematic.world-ready .static-poster { display: none; }
+.journey:is(.world-ready, .world-loading) .static-poster { display: none; }
 .poster-interact {
   position: fixed;
   z-index: 14;
@@ -140,14 +160,11 @@
   transition: opacity .18s, visibility .18s;
 }
 .poster-interact kbd { display: grid; place-items: center; width: 23px; height: 23px; background: #fff5da; border-radius: 50%; font: 700 11px/1 var(--font-body); }
-.mode-cinematic.world-ready[data-traveling="false"] .poster-stop.is-current .poster-interact { visibility: visible; opacity: 1; pointer-events: auto; }
-.mode-lite .castle-hero { height: 100svh; }
-.mode-lite .hero-frame { position: relative; height: 100svh; opacity: 1; }
-.mode-lite .explore-cue span { animation: none; }
-.mode-lite .castle-fallback { opacity: 1; }
-.mode-lite .poster-stop { height: auto; padding: 17px 0; background: var(--paper); }
-.mode-lite .poster-stop:first-of-type { padding-top: 34px; }
-.mode-lite .static-poster { position: relative; top: auto; width: min(86%, 900px); }
+.world-ready[data-traveling="false"] .poster-stop.is-current .poster-interact { visibility: visible; opacity: 1; pointer-events: auto; }
+.world-unavailable .castle-hero { height: 100svh; }
+.world-unavailable .hero-frame { position: relative; height: 100svh; opacity: 1; }
+.world-unavailable .poster-stop { height: auto; padding: 17px 0; background: var(--paper); }
+.world-unavailable .static-poster { position: relative; top: auto; width: min(86%, 900px); }
 .castle-map {
   position: fixed;
   right: max(22px, env(safe-area-inset-right));
@@ -262,7 +279,7 @@
 .world-notice { position: fixed; left: 50%; bottom: 18px; z-index: 40; transform: translateX(-50%); max-width: calc(100% - 26px); padding: 10px 16px; background: var(--paper); border-radius: 20px; box-shadow: 0 5px 22px #30231f40; font-size: 12px; }
 
 @media (max-width: 800px) {
-  .castle-fallback { --fallback-width: min(82vw, 60svh); }
+  .castle-opening { --opening-width: min(86vw, 68svh); }
   .hero-title { width: min(92vw, 720px); top: 15svh; }
   .hero-title img { max-height: 28svh; }
   .castle-map { right: 12px; bottom: 15px; width: 142px; padding: 5px; border-radius: 18px; }
@@ -286,8 +303,8 @@
   .glass-nav nav { gap: 0; }
   .glass-nav nav a { padding: 9px 7px; font-size: 11px; }
   .glass-nav .nav-info { display: none; }
-  .nav-mode { min-height: 36px; padding-inline: 8px; gap: 5px; font-size: 10px; }
-  .nav-mode i { width: 5px; height: 5px; }
+  .nav-sign-in { min-height: 36px; padding-inline: 8px; gap: 5px; font-size: 11px; }
+  .castle-opening { --opening-width: min(92vw, 65svh); }
   .hero-title { top: 17svh; }
   .explore-cue { font-size: 10px; bottom: 9svh; }
   .gallery-grid { grid-template-columns: minmax(0, 1fr); }
@@ -299,7 +316,7 @@
   .nav-brand small { display: none; }
   .nav-emblem { width: 20px; height: 20px; }
   .glass-nav nav a { padding-inline: 6px; }
-  .nav-mode { padding-inline: 7px; }
+  .nav-sign-in { padding-inline: 7px; }
 }
 @media (max-width: 350px) {
   .nav-brand > span { display: none; }

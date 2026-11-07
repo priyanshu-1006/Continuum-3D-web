@@ -42,14 +42,15 @@
   background: #b7813521;
   box-shadow: inset 0 -1px #b17a3f66;
 }
-.glass-nav .nav-mode {
+.glass-nav .nav-sign-in {
   border-color: #b08b5466;
   background: linear-gradient(#fff9e8, #f3e2c0);
   box-shadow: inset 0 1px #fffaf1, 0 2px 4px #53371722;
 }
-.glass-nav .nav-mode:hover { border-color: #87602c; }
-.glass-nav .nav-mode i { box-shadow: 0 0 0 2px #78933c28; }
-.mode-lite .glass-nav .nav-mode i { box-shadow: 0 0 0 2px #bd8b472b; }
+.glass-nav .nav-sign-in:hover,
+.glass-nav .nav-sign-in[aria-current] { border-color: #87602c; background: #f4d99d; }
+.nav-wordmark { width: clamp(118px, 17vw, 167px); height: auto; }
+.site-nav .nav-brand small { display: block; font-size: 10px; }
 
 @media (min-width: 481px) {
   .glass-nav { padding-right: 18px; }
@@ -321,13 +322,12 @@
 
 /* The same cast brass nav follows visitors from the castle into each room. */
 .site-nav {
-  width: min(824px, calc(100% - 32px));
+  width: min(914px, calc(100% - 32px));
   gap: 12px;
 }
 .site-nav .site-nav-links { gap: 1px; }
 .site-nav-links small { display: none; }
 .site-nav-controls { display: flex; align-items: center; gap: 6px; }
-.site-nav-controls:has(.site-nav-menu:only-child) { display: none; }
 .site-nav-menu { display: none; }
 .site-nav-menu-icon { display: grid; gap: 2px; align-content: center; }
 .site-nav-menu-icon i { width: 10px; height: 1.5px; background: currentColor; border-radius: 2px; }
@@ -352,18 +352,42 @@
 }
 .footer-official-links a:hover { background: #382631; border-color: #ffdfaa; }
 
-@media (max-width: 721px) {
+.hero-partner {
+  position: absolute;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: max(24px, env(safe-area-inset-left));
+  pointer-events: auto;
+}
+.powered-by-unstop {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  min-height: 40px;
+  padding: 5px 11px;
+  border: 1px solid #d8b573;
+  border-radius: 999px;
+  color: #463523;
+  background: #fff7e4f2;
+  box-shadow: 0 5px 16px #3323113d, inset 0 1px #fff9ed;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 750;
+}
+.powered-by-unstop img { width: 61px; height: auto; }
+.powered-by-unstop:hover { background: #fffbee; border-color: #91633f; }
+.sponsors-partner { margin-top: 15px; }
+
+@media (max-width: 810px) {
   .site-nav {
     width: min(510px, calc(100% - 24px));
     min-height: 52px;
     gap: 8px;
     padding: 4px 9px 4px 13px;
   }
-  .site-nav-controls:has(.site-nav-menu:only-child) { display: flex; }
-  .site-nav .nav-brand > span { display: block; font-size: clamp(9px, 2.8vw, 12px); }
-  .site-nav .nav-brand small { display: inline; font-size: 8px; }
-  .site-nav .nav-emblem { width: 23px; height: 23px; }
-  .site-nav-menu, .site-nav .nav-mode {
+  .nav-wordmark { width: clamp(105px, 32vw, 146px); }
+  .site-nav .nav-brand small { font-size: 8px; }
+  .site-nav-menu, .site-nav .nav-sign-in {
     min-height: 40px;
     padding-inline: 10px;
     font-size: 11px;
@@ -408,10 +432,14 @@
 
 @media (max-width: 480px) {
   .footer-official-links { justify-content: flex-start; }
+  .hero-partner { left: 11px; bottom: max(14px, env(safe-area-inset-bottom)); }
+  .hero-partner .powered-by-unstop { gap: 5px; min-height: 36px; padding-inline: 8px; font-size: 9px; }
+  .hero-partner .powered-by-unstop img { width: 53px; }
+  .site-nav .nav-sign-in span { display: none; }
 }
 
 @media (max-width: 345px) {
   .site-nav .nav-brand small { display: none; }
-  .site-nav .nav-mode, .site-nav-menu { padding-inline: 7px; }
+  .site-nav .nav-sign-in, .site-nav-menu { padding-inline: 7px; }
   .site-nav-controls { gap: 4px; }
 }

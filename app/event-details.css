@@ -729,17 +729,6 @@
   from { opacity: .88; transform: translateY(0); }
   to { opacity: 1; transform: translateY(-2px); }
 }
-.event-modal-backdrop[data-lite='true'] {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-.event-modal-backdrop[data-lite='true'],
-.event-modal-backdrop[data-lite='true'] .event-modal,
-.event-modal-backdrop[data-lite='true'] :is(.event-world-divider, .event-world-emblem),
-.event-modal-backdrop[data-lite='true'] .event-world-artwork::after {
-  animation: none;
-}
-
 @media (max-width: 980px) {
   .event-world-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .event-world-meta > div:nth-child(3) { border-left: 0; }

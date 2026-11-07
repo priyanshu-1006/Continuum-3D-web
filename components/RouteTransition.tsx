@@ -4,16 +4,24 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const portalDuration = 2100;
+const revealDuration = 180;
 const portalTimeout = 20000;
 const pageNames: Readonly<Record<string, string>> = {
   '/': 'the Castle',
   '/sponsors': 'the Guild Hall',
   '/about': 'the Founders’ Archive',
+  '/team': 'the Team Hall',
   '/contact': 'the Dispatch Tower',
+  '/sign-in': 'the Gatehouse',
 };
 const eventPath = /^\/events\/[^/]+\/?$/;
+const desktopScene = '/continuum/destinations/portal.webp';
+const mobileScene = '/continuum/destinations/portal-mobile-v2.webp';
+const leftDoor = '/continuum/destinations/portal-door-left.webp';
+const rightDoor = '/continuum/destinations/portal-door-right.webp';
 
-type PortalView = { destination: string; lite: boolean };
+type PortalView = { id: number; destination: string };
+type PortalPhase = 'opening' | 'waiting' | 'revealing';
 type Crossing = {
   view: PortalView;
   targetPath: string;
@@ -23,34 +31,27 @@ type Crossing = {
   minimumPassed: boolean;
 };
 
-function liteMode() {
-  if (document.querySelector('.journey.mode-lite') || new URLSearchParams(location.search).get('view') === 'lite') return true;
-  try { return localStorage.getItem('continuum-view') === 'lite'; } catch { return false; }
-}
-
 function isEventModal() {
   return Boolean(document.querySelector('[data-event-dialog="true"]'));
 }
 
-function Portal({ view, onShow }: { view: PortalView; onShow: (view: PortalView) => void }) {
+function Portal({ view, phase, onShow }: { view: PortalView; phase: PortalPhase; onShow: (view: PortalView) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const [lit, setLit] = useState(false);
 
   useLayoutEffect(() => {
     const element = dialog.current;
     if (!element) return;
     element.showModal();
     onShow(view);
-    return () => { element.close(); };
+    return () => element.close();
   }, [onShow, view]);
 
   return (
     <dialog
       ref={dialog}
       className="route-portal"
-      data-lite={view.lite}
-      data-lit={lit}
-      aria-label="Castle portal"
+      data-phase={phase}
+      aria-label="Castle gate"
       onCancel={(event) => event.preventDefault()}
       onKeyDown={(event) => {
         if (event.key === 'Escape') {
@@ -59,27 +60,33 @@ function Portal({ view, onShow }: { view: PortalView; onShow: (view: PortalView)
         }
       }}
     >
-      <picture className="route-portal__scene" aria-hidden="true">
-        <source media="(max-width: 680px)" srcSet="/continuum/destinations/portal-mobile.webp" />
-        <img src="/continuum/destinations/portal.webp" alt="" width="1600" height="900" />
-      </picture>
-      <div className="route-portal__glimmer" aria-hidden="true" />
-      <div className="route-portal__plaque">
-        <button
-          type="button"
-          className="route-portal__rune"
-          aria-label="Light the portal rune"
-          aria-pressed={lit}
-          onClick={() => setLit((value) => !value)}
-          title="Light the portal rune"
-        ><span aria-hidden="true" /><small aria-hidden="true">{lit ? 'Rune lit' : 'Light rune'}</small></button>
-        <div className="route-portal__message">
-          <p className="route-portal__kicker">CONTINUUM 2027 · Castle Portal</p>
-          <p className="route-portal__destination" role="status">Entering {view.destination}</p>
-          <div className="route-portal__blocks" aria-hidden="true">
-            {Array.from({ length: 8 }, (_, index) => <span key={index} style={{ animationDelay: `${index * (portalDuration / 8)}ms` }} />)}
+      <div className="route-portal__world" aria-hidden="true">
+        <picture className="route-portal__scene">
+          <source media="(max-width: 680px) and (orientation: portrait)" srcSet={mobileScene} />
+          <img src={desktopScene} alt="" width="1600" height="900" />
+        </picture>
+        <div className="route-portal__gate">
+          <div className="route-portal__leaf route-portal__leaf--left">
+            <img src={leftDoor} alt="" />
           </div>
+          <div className="route-portal__leaf route-portal__leaf--right">
+            <img src={rightDoor} alt="" />
+          </div>
+          <span className="route-portal__seam" />
+          <span className="route-portal__latch"><i /></span>
         </div>
+      </div>
+      <div className="route-portal__vignette" aria-hidden="true" />
+      <p className="route-portal__edition" aria-hidden="true">CONTINUUM <span>2027</span></p>
+      <div className="route-portal__message">
+        <div className="route-portal__chapters" aria-hidden="true">
+          <span>Unseal</span>
+          <span>Open</span>
+          <span>Cross</span>
+        </div>
+        <p className="route-portal__destination" role="status">
+          {phase === 'waiting' ? 'Waiting to enter' : 'Entering'} {view.destination}
+        </p>
       </div>
     </dialog>
   );
@@ -88,14 +95,18 @@ function Portal({ view, onShow }: { view: PortalView; onShow: (view: PortalView)
 export default function RouteTransition() {
   const pathname = usePathname();
   const [view, setView] = useState<PortalView | null>(null);
+  const [phase, setPhase] = useState<PortalPhase>('opening');
   const currentRoute = useRef({ pathname, modal: false });
   const fullPage = useRef(pathname);
   const pending = useRef<Crossing | null>(null);
+  const sequence = useRef(0);
   const minimumTimer = useRef(0);
+  const revealTimer = useRef(0);
   const safetyTimer = useRef(0);
 
   const clearTimers = useCallback(() => {
     window.clearTimeout(minimumTimer.current);
+    window.clearTimeout(revealTimer.current);
     window.clearTimeout(safetyTimer.current);
   }, []);
 
@@ -113,12 +124,22 @@ export default function RouteTransition() {
     });
   }, [clearTimers]);
 
+  const reveal = useCallback((crossing: Crossing) => {
+    clearTimers();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      finish(crossing.focusDestination);
+      return;
+    }
+    setPhase('revealing');
+    revealTimer.current = window.setTimeout(() => finish(crossing.focusDestination), revealDuration);
+  }, [clearTimers, finish]);
+
   const begin = useCallback((destination: string, focusDestination: boolean, documentHref?: string) => {
     clearTimers();
     const next: Crossing = {
       view: {
+        id: ++sequence.current,
         destination: pageNames[destination] ?? (eventPath.test(destination) ? 'the event chamber' : 'the next chamber'),
-        lite: liteMode(),
       },
       targetPath: destination,
       documentHref,
@@ -127,6 +148,7 @@ export default function RouteTransition() {
       minimumPassed: false,
     };
     pending.current = next;
+    setPhase('opening');
     setView(next.view);
     return next;
   }, [clearTimers]);
@@ -137,11 +159,15 @@ export default function RouteTransition() {
     clearTimers();
     minimumTimer.current = window.setTimeout(() => {
       crossing.minimumPassed = true;
+      if (crossing.committed) {
+        reveal(crossing);
+        return;
+      }
+      setPhase('waiting');
       if (crossing.documentHref) window.location.assign(crossing.documentHref);
-      else if (crossing.committed) finish(crossing.focusDestination);
     }, portalDuration);
     safetyTimer.current = window.setTimeout(() => finish(), portalTimeout);
-  }, [clearTimers, finish]);
+  }, [clearTimers, finish, reveal]);
 
   useLayoutEffect(() => {
     const previous = currentRoute.current;
@@ -159,16 +185,17 @@ export default function RouteTransition() {
     const crossing = pending.current ?? begin(pathname, false);
     if (crossing.targetPath !== pathname) return;
     crossing.committed = true;
-    if (crossing.minimumPassed) finish(crossing.focusDestination);
-  }, [begin, finish, pathname]);
+    if (crossing.minimumPassed) reveal(crossing);
+  }, [begin, finish, pathname, reveal]);
 
   useEffect(() => {
     // A small background request makes the first crossing start with its artwork.
-    const art = new window.Image();
-    art.fetchPriority = 'low';
-    art.src = window.matchMedia('(max-width: 680px)').matches
-      ? '/continuum/destinations/portal-mobile.webp'
-      : '/continuum/destinations/portal.webp';
+    const scene = window.matchMedia('(max-width: 680px) and (orientation: portrait)').matches ? mobileScene : desktopScene;
+    for (const src of [scene, leftDoor, rightDoor]) {
+      const art = new window.Image();
+      art.fetchPriority = 'low';
+      art.src = src;
+    }
 
     function onClick(event: MouseEvent) {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -214,5 +241,5 @@ export default function RouteTransition() {
     };
   }, [begin, clearTimers, finish]);
 
-  return view ? <Portal view={view} onShow={onShow} /> : null;
+  return view ? <Portal key={view.id} view={view} phase={phase} onShow={onShow} /> : null;
 }

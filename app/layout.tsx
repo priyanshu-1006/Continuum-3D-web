@@ -10,7 +10,7 @@ import './route-transition.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: { default: 'CONTINUUM 2027 — A World of Possibility', template: '%s | CONTINUUM 2027' },
-  description: 'Enter CONTINUUM 2027. Discover Neural Nexsus, PromptX, Nexathon, RedStone Rush and Battleforge — a world of learning, ideas, building and competition by NEXSUS at MMMUT, Gorakhpur.',
+  description: 'Enter CONTINUUM 2027. Discover Neural Nexsus, PromptX, Nexathon, RedStone Rush and Battleforge — a world of learning, ideas, building and competition by Nexsus at MMMUT, Gorakhpur.',
   applicationName: 'CONTINUUM 2027',
   openGraph: { title: 'CONTINUUM 2027 — A World of Possibility', description: 'One world. Five ways to make your mark. January 2027 · MMMUT, Gorakhpur.', type: 'website', images: ['/assets/posters/redstone-rush.webp'] },
   twitter: { card: 'summary_large_image', title: 'CONTINUUM 2027', description: 'One world. Five ways to make your mark.', images: ['/assets/posters/redstone-rush.webp'] },

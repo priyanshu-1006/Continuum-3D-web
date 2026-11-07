@@ -64,7 +64,7 @@ export default function EventDetails({ event }: { event: Event }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="event-banner-image" src={event.poster} alt={`${event.title} Minecraft-inspired event artwork`} width="1600" height="900" fetchPriority="high" />
             <div className="event-art-shade" />
-            <div className="event-art-label"><span>NEXSUS PRESENTS</span><span>CONTINUUM / 2027</span></div>
+            <div className="event-art-label"><span>Nexsus presents</span><span>CONTINUUM / 2027</span></div>
           </div>
           <div className="event-art-caption"><span>ENTER THE NEXT CHAPTER</span><span aria-hidden="true">↗</span></div>
         </div>
@@ -149,7 +149,7 @@ export default function EventDetails({ event }: { event: Event }) {
         <span>A Nexsus experience at MMMUT, Gorakhpur.</span>
         <a href={officialLinks.festival} target="_blank" rel="noopener noreferrer">Festival on Unstop ↗</a>
         <a href={officialLinks.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
-        <a href={officialLinks.university} target="_blank" rel="noopener noreferrer">Nexsus platform ↗</a>
+        <a href={officialLinks.nexsus} target="_blank" rel="noopener noreferrer">Nexsus platform ↗</a>
       </div>
     </article>
   );

@@ -51,7 +51,7 @@ export default function EventModal({ event }: { event: Event }) {
     if (closing.current) return;
     closing.current = true;
     const backdrop = backdropRef.current;
-    if (!backdrop || backdrop.dataset.lite === "true" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!backdrop || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       router.back();
       return;
     }
@@ -75,7 +75,6 @@ export default function EventModal({ event }: { event: Event }) {
     const originalOverflow = document.body.style.overflow;
     const siteRoot = document.getElementById("site-root");
     if (backdrop) {
-      backdrop.dataset.lite = String(Boolean(siteRoot?.querySelector(".journey.mode-lite")));
       delete backdrop.dataset.closing;
     }
     if (activeElement && siteRoot?.contains(activeElement)) returnFocusTarget = activeElement;

@@ -1,0 +1,26 @@
+# Castle opening and gate artwork
+
+The images were generated with the built-in ImageGen tool. WebP exports are served from `public/continuum`.
+
+- `layers/castle-opening.webp` and `layers/castle-opening-mobile.webp` are transparent opening illustrations based on the supplied rendering of [patrix’s castle](https://sketchfab.com/3d-models/minecraft-castle-4b63724d7eab47079f905369cf8a0f98). The adaptation is distributed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The live 3D model is unchanged.
+- `chrome/continuum-wordmark.webp` is the transparent navbar wordmark.
+- `destinations/portal-mobile-v2.webp` is the 9:16 gate scene. `destinations/portal-door-left.webp` and `destinations/portal-door-right.webp` are the two transparent leaves cut from the generated double door.
+- `chrome/unstop-logo.svg` is the official [Unstop wordmark](https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/svg/unstop-logo.svg), served with its existing colors and linked to the festival listing.
+
+## ImageGen prompts
+
+### Hero
+
+Re-illustrate the exact referenced Minecraft castle silhouette as a premium 2D transparent cutout for a sunny cinematic landing page. Preserve camera angle and the fortification footprint from the reference: elevated long outer crenellated wall, open central gate at the bottom on center with a small short flat sandstone landing, Gothic stone keep and right-hand tall square tower, terracotta peaked roof, high chunky forested rock on left and behind. Preserve central gate and keep placement to crossfade into the real 3D model later. Replace the low-contrast triangulation and shadow with finely sculpted Minecraft voxel stone blocks, sunlit warm grey sandstone and slate, light warm peach sunlight from upper left, gold accents, subtle flowering vines, detailed moss and a few golden window lights. Mid-distance landscape form, crisp architectural detail. Compose entire castle alone, no clipping, wide 16:9 canvas, opaque shape with genuine transparent background everywhere beyond silhouette. No sky, mountains outside the castle, roadway, environment plane, gradients outside shape, UI, characters, words, logos or watermark. A thin grassy or stone edge at the base integrated with the structure, no bulky floating platform.
+
+### Brand
+
+Create a small-site-brand transparent PNG wordmark asset. Write exactly CONTINUUM, spell C-O-N-T-I-N-U-U-M with two consecutive U letters before M. One straight horizontal line with exceptionally readable, chunky but medium-width Minecraft-inspired block letters, pale warm ivory smooth voxel sandstone fronts, dark bronze-brown bevel edges, a subtle rich amber keyline and thin pixel-block highlights, slightly extruded depth only below letters, front-on orthographic, distinct spaces between letter silhouettes without interrupting the word. Understated tiny gold block accents on the top edge only, no moss covering letters. Designed to read at 130 pixels wide against light translucent cream, prioritize contrast, even spacing, clean angular edges and a wide short profile. Entire word visible with small transparent margin. One word only, no 2027, badges, infinity mark, background, scenery, shadow beyond silhouette, people, watermark, or other text. Actual alpha, not checkerboard.
+
+### Mobile
+
+Create a tall portrait 9:16 raster image specifically for a phone full-screen route transition in a premium Minecraft-style festival site. Camera at eye height, centered, standing under a soaring stepped stone gateway just as it opens; look through a fully OPEN arch to the bright welcoming castle town inside with glowing teal glass, amber lanterns and a paved bridge guiding the eye toward a lit tower. Deep luminous dusk blue stone on sides, soft violet sky at top and a distinct narrow golden opening at center, cozy warm light spilling down steps. The central arch aperture should be at x approximately 22 to 78 percent, y approximately 19 to 63 percent of the image, with vertical jambs and stepped upper arch, visually framed by walls on each side. No gate door leaves in artwork; they are animated over the opening separately. Bottom 27 percent is dark but visible stone paving for a real overlay caption. Grand visual storytelling, tactile block texture and Minecraft voxels, high depth, deliberate vertical composition, clean silhouette, no people, text, logos, HUD, labels, borders, or watermark.
+
+### Doors
+
+Create one game sprite of a symmetrical pair of CLOSED medieval castle gate doors, straight-on orthographic front elevation on a genuinely transparent background. Both leaves together are nearly square, slight tall (total width about 90% of height). Two mirrored adjoining doors touch along a straight vertical seam at exact x=50%, each with a perfectly straight inner edge. Stepped Minecraft block arch top, outer silhouette slightly stair-stepped near top, flat bottom. Each leaf uses dark brown pixelated oak vertical plank grain, deep copper-bronze horizontal iron straps, square studs and one small gold and teal lock escutcheon near seam. Antique but polished voxel hardware, warm dimensional relief with low-strength shadow inside the sprite. Only the gate doors with no stone frame, no threshold, no environment, no texts or watermark. Centered, complete silhouette with transparent margin, absolutely no perspective tilt.
