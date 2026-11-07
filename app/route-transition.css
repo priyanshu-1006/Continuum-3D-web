@@ -1,0 +1,180 @@
+body:has(.route-portal[open]) { overflow: hidden; }
+
+.route-portal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(16px, 4vw, 48px);
+  border: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: #35271d;
+  background: #183244;
+  isolation: isolate;
+}
+
+.route-portal[open] {
+  display: grid;
+  align-items: end;
+  justify-items: center;
+}
+
+.route-portal::backdrop { background: #183244; }
+
+.route-portal__scene,
+.route-portal__scene::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.route-portal__scene { z-index: -2; overflow: hidden; }
+
+.route-portal__scene::after {
+  background: linear-gradient(180deg, transparent 56%, #101a2466 83%, #101a24b8);
+  content: '';
+}
+
+.route-portal__scene img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.route-portal:not([data-lite='true']) .route-portal__scene img {
+  animation: portal-approach 2.1s cubic-bezier(.2, .5, .35, 1) both;
+}
+
+.route-portal__glimmer {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 49%, #fbe1a9ae 1%, #72f6ed65 15%, transparent 46%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: opacity .24s ease;
+}
+
+.route-portal[data-lit='true'] .route-portal__glimmer { opacity: .8; }
+
+@keyframes portal-approach {
+  from { transform: scale(1); }
+  to { transform: scale(1.085); }
+}
+
+.route-portal__plaque {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
+  width: min(100%, 505px);
+  padding: clamp(14px, 2.5vw, 24px);
+  border: 1px solid #fce2ac;
+  border-radius: clamp(17px, 2vw, 24px);
+  background: linear-gradient(155deg, #fff3dff5, #f7e0bde8);
+  box-shadow: 0 0 0 3px #6c472f94, 0 16px 45px #0919239e, inset 0 1px #fffaf2;
+}
+
+.route-portal__rune {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 8vw, 68px);
+  min-height: clamp(54px, 8vw, 72px);
+  padding: 6px 0;
+  border: 2px solid #896248;
+  border-radius: 13px;
+  background: linear-gradient(142deg, #30535a, #202f38 65%);
+  box-shadow: inset 0 0 0 3px #e1ae6a6e, 0 3px #583e29;
+}
+
+.route-portal__rune span {
+  width: 45%;
+  aspect-ratio: 1;
+  border: 2px solid #b9f6ec;
+  border-radius: 3px;
+  background: linear-gradient(125deg, #b8fff4 0 32%, #53bdb7 32% 68%, #287672 68%);
+  box-shadow: 0 0 12px #62eadd90, inset 0 0 0 2px #367f7977;
+  transform: rotate(45deg);
+}
+
+.route-portal__rune[aria-pressed='true'] span {
+  border-color: #fff4c6;
+  background: linear-gradient(125deg, #fff4c6 0 32%, #ffc666 32% 68%, #b9682f 68%);
+  box-shadow: 0 0 20px #ffc66f, 0 0 4px 4px #ffda9261;
+}
+
+.route-portal__rune:focus-visible { outline-offset: 5px; }
+
+.route-portal__rune small {
+  color: #fff1d3;
+  font-size: clamp(8px, 1.55vw, 10px);
+  font-weight: 750;
+}
+
+.route-portal__kicker {
+  color: #704923;
+  font-size: clamp(9px, 1.9vw, 11px);
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.route-portal__destination {
+  margin: 4px 0 10px;
+  font: 610 clamp(19px, 3vw, 29px)/1.13 var(--font-display);
+  letter-spacing: -.018em;
+  text-wrap: balance;
+}
+
+.route-portal__blocks {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  width: min(100%, 236px);
+}
+
+.route-portal__blocks span {
+  height: 8px;
+  border: 1px solid #99714e;
+  border-radius: 2px;
+  background: #d8b58d;
+  animation: portal-block-charge 250ms steps(3, end) both;
+}
+
+.route-portal__rune[aria-pressed='true'] + .route-portal__message .route-portal__blocks {
+  filter: hue-rotate(218deg) saturate(1.3);
+}
+
+@keyframes portal-block-charge {
+  to {
+    border-color: #3a7a74;
+    background: #70c7b4;
+    box-shadow: inset 0 1px #d2fff1;
+  }
+}
+
+.route-portal[data-lite='true'] .route-portal__blocks span {
+  border-color: #3a7a74;
+  background: #70c7b4;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-portal:not([data-lite='true']) .route-portal__scene img { animation: none; }
+  .route-portal__glimmer { transition: none; }
+  .route-portal__blocks span {
+    border-color: #3a7a74;
+    background: #70c7b4;
+    animation: none;
+  }
+}
+
+.route-portal[data-lite='true'] .route-portal__glimmer { transition: none; }

@@ -1,0 +1,4 @@
+* text=auto
+# The checked-in asset manifest hashes these files byte-for-byte.
+public/assets/** -text
+public/continuum/** -text

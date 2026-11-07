@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 52" fill="none" aria-hidden="true">
+  <defs><filter id="glow" x="-20%" y="-100%" width="140%" height="300%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+  <path d="M10 26H118L142 12H245L271 26H342L365 14H412L435 26H520L548 9H650L673 26H750" stroke="#ffc36c" stroke-width="7" opacity=".45" filter="url(#glow)"/>
+  <path d="M10 26H118L142 12H245L271 26H342L365 14H412L435 26H520L548 9H650L673 26H750" stroke="#ffc36c" stroke-width="3" stroke-linejoin="bevel"/>
+  <g fill="#ffc36c"><rect x="5" y="21" width="10" height="10"/><rect x="135" y="6" width="12" height="12"/><rect x="358" y="8" width="13" height="13"/><rect x="543" y="4" width="11" height="11"/><rect x="745" y="21" width="10" height="10"/></g>
+</svg>

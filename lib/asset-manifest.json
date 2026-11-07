@@ -1,0 +1,749 @@
+{
+  "schemaVersion": 1,
+  "preparationPackage": "CONTINUUM-2027-preparation",
+  "rasterEncoder": {
+    "sharp": "0.34.5",
+    "vips": "8.17.3"
+  },
+  "sourceFilesVerifiedUnchanged": true,
+  "sourceFileCount": 80,
+  "sourceFiles": [
+    {
+      "path": "ASSET-CREDITS.md",
+      "bytes": 3738,
+      "sha256": "8c025ddb0daf9e90d0c216dfa42de6687ecb6de297448bbcecfd2ea0fa835a23"
+    },
+    {
+      "path": "assets/castle/castle-assets-report.json",
+      "bytes": 13061,
+      "sha256": "82969b975f65d6aa905459a17153501bdc9b4a9dec80a19ef3abca57d880f972"
+    },
+    {
+      "path": "assets/castle/castle-meshopt16-candidate.glb",
+      "bytes": 7022148,
+      "sha256": "7b2c05868f1639f44e9dbe17dc37f3ccd880534f2116c445b4eeaebdf2b32824"
+    },
+    {
+      "path": "assets/castle/castle-meshopt16-candidate.glb.gz",
+      "bytes": 2302615,
+      "sha256": "5a215ba24ac138a136c5facf86b6e1e940925c64181cc5d95d71dce3a43e9234"
+    },
+    {
+      "path": "assets/castle/castle-safe.glb",
+      "bytes": 37732800,
+      "sha256": "4c3f9aab0b4f4c0ecfc034230d1eeda882148693b325767e189b478f234226bc"
+    },
+    {
+      "path": "assets/castle/castle-safe.glb.gz",
+      "bytes": 8140293,
+      "sha256": "52bddf74a66653b288c679c7b17095b2ea1def01a131ed4c051cb7296f7c04c5"
+    },
+    {
+      "path": "assets/castle/castle-unlit-web.glb",
+      "bytes": 24172668,
+      "sha256": "89fdc4c05f4bc595e10606f2eba6f70f6dd1d6a9bcf3b278a5d8884118296cfd"
+    },
+    {
+      "path": "assets/castle/castle-unlit-web.glb.gz",
+      "bytes": 7653514,
+      "sha256": "54e50d95839583aaa5890793d4a69c30dc9a7bf9bb8fb8ce9184a175c1f4839b"
+    },
+    {
+      "path": "assets/castle/README.md",
+      "bytes": 3230,
+      "sha256": "8bd0aba655c4feb0dfb265c1821c0e3b8e71ca912f0a3b99315a0732568a87ca"
+    },
+    {
+      "path": "assets/castle/validation/castle-meshopt16-candidate.validation.json",
+      "bytes": 1637,
+      "sha256": "ed05baf4c5ee96179774e249fdc3b5cee3621724a8cd7ed3f2b593e07ae801d1"
+    },
+    {
+      "path": "assets/castle/validation/castle-meshopt16-decoded.validation.json",
+      "bytes": 1231,
+      "sha256": "4f06341d204b907a3c3fc722c1da9a40db05bb54336d3e8334dc68758dd6ca36"
+    },
+    {
+      "path": "assets/castle/validation/castle-safe.validation.json",
+      "bytes": 1119,
+      "sha256": "4c0dc4e31c5fee4c7fb56509ef0d3c6a9f4988616e91e46b4cb7b076b71c5f96"
+    },
+    {
+      "path": "assets/castle/validation/castle-unlit-web.validation.json",
+      "bytes": 1123,
+      "sha256": "bba42bced84aa06fa52cbe8f770669ae12c5e4b4cf4a4693359f8adc719c838f"
+    },
+    {
+      "path": "assets/castle/validation/source-original.validation.json",
+      "bytes": 1124,
+      "sha256": "38da803e619254933689d26071d20e5d78722d7c88bb974f10220f00d6172e62"
+    },
+    {
+      "path": "assets/nature/bush-1.glb",
+      "bytes": 7716,
+      "sha256": "f7a4e4de5fe431a65b51759a2cae1415d1182ac8f0d6b658f52975615802cd9c"
+    },
+    {
+      "path": "assets/nature/forest-4.glb",
+      "bytes": 72056,
+      "sha256": "6c73a4084ed00ba10a9d666deab3e03e39127fd0fe21b199811db3df7598abaa"
+    },
+    {
+      "path": "assets/nature/nature-assets-report.json",
+      "bytes": 45532,
+      "sha256": "1185e55020a4ea118b10d1856fc0f53384de656cac9c322245c03fde4eef81c5"
+    },
+    {
+      "path": "assets/nature/path-curve-3.glb",
+      "bytes": 26512,
+      "sha256": "22608cad4adc159ee791a522f4b0413acc2187bc2f776cfbde6afd42afbd4711"
+    },
+    {
+      "path": "assets/nature/path-straight-3.glb",
+      "bytes": 22768,
+      "sha256": "8eb4dc1533f7bc431b4dcdb05cb740321be6aad06270f519ff6592a9c9774ed8"
+    },
+    {
+      "path": "assets/nature/README.md",
+      "bytes": 2316,
+      "sha256": "ba145c824cbd0625f7f69e4e1441634631bfbaf088355d3f2ae725b5e27aab8e"
+    },
+    {
+      "path": "assets/nature/source-selected/bushes/bush-1.bin",
+      "bytes": 6120,
+      "sha256": "89dc92df248ef62da6c7166d9ed2c026d46196a8cfd72d38bd2cc9bd16c97d23"
+    },
+    {
+      "path": "assets/nature/source-selected/bushes/bush-1.gltf",
+      "bytes": 1929,
+      "sha256": "ef3177b1eeb3fe03021f1d444b00f6970942da8bb2a1102db215bc2b5bc6d262"
+    },
+    {
+      "path": "assets/nature/source-selected/bushes/texture.png",
+      "bytes": 159,
+      "sha256": "5f0c21cd8f54a1228b5bbdaa8f13195ebf9fcd59568805a7f51584d21f7c058d"
+    },
+    {
+      "path": "assets/nature/source-selected/forest/forest-4.bin",
+      "bytes": 70456,
+      "sha256": "7eec42738bb69302eda297c809c11577f92873d27b0e67d2242a90e7d520ddae"
+    },
+    {
+      "path": "assets/nature/source-selected/forest/forest-4.gltf",
+      "bytes": 1936,
+      "sha256": "acc7cf556aa951c95c2a10f3aaf7afb77e5e3a15499d2d2e0c03c41b6826c9fa"
+    },
+    {
+      "path": "assets/nature/source-selected/forest/texture.png",
+      "bytes": 159,
+      "sha256": "5f0c21cd8f54a1228b5bbdaa8f13195ebf9fcd59568805a7f51584d21f7c058d"
+    },
+    {
+      "path": "assets/nature/source-selected/paths/path-curve-3.bin",
+      "bytes": 24896,
+      "sha256": "53ed51f4c0173c40a357472c4b5cabddf91496676f4f06da333a5db20fe63c34"
+    },
+    {
+      "path": "assets/nature/source-selected/paths/path-curve-3.gltf",
+      "bytes": 1954,
+      "sha256": "612227016cb9c810757e5a7cec51b32a2c56b028abbf9dcb2f52af52c3c52bad"
+    },
+    {
+      "path": "assets/nature/source-selected/paths/path-straight-3.bin",
+      "bytes": 21144,
+      "sha256": "bc55d82d24f1808015b1ccd867c5d0698c2b457661166ac2332a5b49d0500133"
+    },
+    {
+      "path": "assets/nature/source-selected/paths/path-straight-3.gltf",
+      "bytes": 1963,
+      "sha256": "c777a04b7ac77690df05ecf40ef528683bae38104f41b215ba9cffe35c86111b"
+    },
+    {
+      "path": "assets/nature/source-selected/paths/texture.png",
+      "bytes": 159,
+      "sha256": "5f0c21cd8f54a1228b5bbdaa8f13195ebf9fcd59568805a7f51584d21f7c058d"
+    },
+    {
+      "path": "assets/nature/source-selected/stones/stone-1.bin",
+      "bytes": 3216,
+      "sha256": "d6b471a9d76c24651618ed60056caee80dbaf084c0cf6be3eb465ec329c48c67"
+    },
+    {
+      "path": "assets/nature/source-selected/stones/stone-1.gltf",
+      "bytes": 1927,
+      "sha256": "8bac14bf6412b9b6fb4465d0b4af28a521ee1520622c4faabf953e47b57cfde6"
+    },
+    {
+      "path": "assets/nature/source-selected/stones/stone-3.bin",
+      "bytes": 8184,
+      "sha256": "918e2c16151f446f7214792d924a702bde2260464f833f33e465c4cc33745a21"
+    },
+    {
+      "path": "assets/nature/source-selected/stones/stone-3.gltf",
+      "bytes": 1911,
+      "sha256": "1c0a3a2ddcb57dd36d495c330087099cfb3978373b67688ac3f925bc56648394"
+    },
+    {
+      "path": "assets/nature/source-selected/stones/texture.png",
+      "bytes": 159,
+      "sha256": "5f0c21cd8f54a1228b5bbdaa8f13195ebf9fcd59568805a7f51584d21f7c058d"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/texture.png",
+      "bytes": 159,
+      "sha256": "5f0c21cd8f54a1228b5bbdaa8f13195ebf9fcd59568805a7f51584d21f7c058d"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-1.bin",
+      "bytes": 6712,
+      "sha256": "b9130afb93efdc09e218a9f77098fcd6c6c2fc83333c7ef8db5f5d8bc4b72cfe"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-1.gltf",
+      "bytes": 1912,
+      "sha256": "6a4274dba062233c8111459542ef2f988648ed25efd475751a50e66dcb97f99a"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-4.bin",
+      "bytes": 22264,
+      "sha256": "fd2a5fd5d805caaba08ebb34d4689e77cf818b7736f54de7d14f2022318b1479"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-4.gltf",
+      "bytes": 1929,
+      "sha256": "2e974e4648f6062507c2683515af014b735061f759bb20a2ee798e8623a7b4b5"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-7.bin",
+      "bytes": 43176,
+      "sha256": "0ed1b114ffb61db131c4cc6a11c1ca3dadb0e500e45cc96c4f6b997c1cd844e4"
+    },
+    {
+      "path": "assets/nature/source-selected/trees/tree-7.gltf",
+      "bytes": 1934,
+      "sha256": "e7da3085f14cd98763eb869d6d46e8f31e248601749ec54bc710ddbaff0a9d76"
+    },
+    {
+      "path": "assets/nature/stone-1.glb",
+      "bytes": 4812,
+      "sha256": "ed479ec6a7ae8a9cb7daf480c08cf1d7ecfe1da664ad7f994008e6d2a1c92501"
+    },
+    {
+      "path": "assets/nature/stone-3.glb",
+      "bytes": 9764,
+      "sha256": "0861dc19640e3f97d1090a6dd339fe736c902a62995f6b563af0968726954b3c"
+    },
+    {
+      "path": "assets/nature/tree-1.glb",
+      "bytes": 8292,
+      "sha256": "ccec009434c8dfed9c32b0ef076d8471019eac8863f4bdbe1c408057783612f9"
+    },
+    {
+      "path": "assets/nature/tree-4.glb",
+      "bytes": 23864,
+      "sha256": "234db287c7c0bef370fdb6a116c40d3d1ee15c7a1c96750c4b7078d509f1c2ce"
+    },
+    {
+      "path": "assets/nature/tree-7.glb",
+      "bytes": 44776,
+      "sha256": "73b8cb3ffff0704a001f3fd18cc043d3febd7798181ae108f952a4e015bc3920"
+    },
+    {
+      "path": "assets/nature/validation/bush-1.validation.json",
+      "bytes": 1166,
+      "sha256": "bfefa61956741cc003f51fd8a733a50895e9b2b40fde23f8e9c4282a648d458b"
+    },
+    {
+      "path": "assets/nature/validation/forest-4.validation.json",
+      "bytes": 1171,
+      "sha256": "3702fe23c8137b3aad777f48280d90c9ed6bfb5e2ddb10ef4a5c77ebfddf307a"
+    },
+    {
+      "path": "assets/nature/validation/path-curve-3.validation.json",
+      "bytes": 1173,
+      "sha256": "e63bba0500d5b8b61527e7bd4d87a4b719b58fcb044b0b56729ec8f7e26dcaf6"
+    },
+    {
+      "path": "assets/nature/validation/path-straight-3.validation.json",
+      "bytes": 1176,
+      "sha256": "06aeef8cc8a1c1520ea99048d0a4f3028b6480fb58d19c3053e3d78c7a25a77e"
+    },
+    {
+      "path": "assets/nature/validation/stone-1.validation.json",
+      "bytes": 1165,
+      "sha256": "cffce3cea624b0eb338ba6603d373061ea40c5444c39855df23a107950927eb9"
+    },
+    {
+      "path": "assets/nature/validation/stone-3.validation.json",
+      "bytes": 1167,
+      "sha256": "ec5ad6beaad90af99d53a95c491c7a2d3e1721c2465361baa4bef6bfcc6490f1"
+    },
+    {
+      "path": "assets/nature/validation/tree-1.validation.json",
+      "bytes": 1166,
+      "sha256": "4e915e29bbec7d1a9c3d60f6cca1e59c3781f3b88d3df3531f9510cbb9a14424"
+    },
+    {
+      "path": "assets/nature/validation/tree-4.validation.json",
+      "bytes": 1167,
+      "sha256": "3c181b1ad565ace5ff3ac5398dca803c4be6f862b14d042ff68790dabe18686b"
+    },
+    {
+      "path": "assets/nature/validation/tree-7.validation.json",
+      "bytes": 1168,
+      "sha256": "2e4177d47a870b14fba15e36b9e300055e8ba129aeec3d9558a5c810049b1dba"
+    },
+    {
+      "path": "CONTINUUM-2027-blueprint.md",
+      "bytes": 23287,
+      "sha256": "8bb2e36a5030b61858923ea2879c4e2c3941a70d77a7f49fe36ef448068248af"
+    },
+    {
+      "path": "CONTINUUM-2027-creative-brief.pdf",
+      "bytes": 6456232,
+      "sha256": "b7a9e6e57910836634985eeef059ac8e5ce3112f471627b268a9e8707758a833"
+    },
+    {
+      "path": "EVENT-CONTENT-TO-APPROVE.md",
+      "bytes": 3319,
+      "sha256": "71a17f08d69935b9076ecf8b032fddaea9c52c04d93d0044c5629b592c6ef69f"
+    },
+    {
+      "path": "FREE-DOWNLOADS.md",
+      "bytes": 2552,
+      "sha256": "003c5273eba37ad1023adca51b765a329ab7a7d40a6c0b5ea2982169c8a88617"
+    },
+    {
+      "path": "PACKAGE-MANIFEST.json",
+      "bytes": 14612,
+      "sha256": "3769b322371d0f1d1ed0e0dbbba81b70165626a42cdb0623397307fcc5b29233"
+    },
+    {
+      "path": "previews/castle-geometry-contact-sheet.png",
+      "bytes": 2403380,
+      "sha256": "8e56644f5fa47c53d9a2c5fd604057d01b1902a4da50b73fda7c31c12a029b7e"
+    },
+    {
+      "path": "previews/castle-geometry-opposite.png",
+      "bytes": 606222,
+      "sha256": "9eb2e9449c62d4c1386fd322f1afbf07a3706e8c45b694cf8dafe25b2a100ff4"
+    },
+    {
+      "path": "previews/castle-geometry-overview.png",
+      "bytes": 740376,
+      "sha256": "ce9e1b82164e2c496161a7da821fdf5b0ed8876ad2705c613f48dbdecd9d2a39"
+    },
+    {
+      "path": "previews/castle-geometry-topview.png",
+      "bytes": 346795,
+      "sha256": "1fc0e2b2646cfcd33259c6b02035dd9c173b89004f2ae8de0a2058cf7d6a1ef2"
+    },
+    {
+      "path": "previews/README.md",
+      "bytes": 1442,
+      "sha256": "e18bb59b59c7d0f40b83885524b51dfe8cf7235b8ea4abd3903ed2d396ca02fe"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4797,
+      "sha256": "6c70cfdfa54a2a54e1f6b9961468fc971926373680facef7aa7a73123c052e02"
+    },
+    {
+      "path": "screen-art/battleforge.png",
+      "bytes": 2759376,
+      "sha256": "0af5acbf12b88fc7f3e1437dcd155ec6efc443b04f869cfe5570a3bf7b9b0aa0"
+    },
+    {
+      "path": "screen-art/IMAGEGEN-PROMPTS.json",
+      "bytes": 12047,
+      "sha256": "cce8361c0fb5cc9a7c22df12ae4e65a66413b1fe9e81672d9898482335e459ef"
+    },
+    {
+      "path": "screen-art/neural-nexsus.png",
+      "bytes": 2709699,
+      "sha256": "c423f7fc78c795466a947cb13e774af344ef32b6c2e44af695890e1fc990e37a"
+    },
+    {
+      "path": "screen-art/nexathon.png",
+      "bytes": 2556824,
+      "sha256": "53f90d33776cea29986d972edd779839bf29a0694be156fec27bbf087070f4f1"
+    },
+    {
+      "path": "screen-art/promptx.png",
+      "bytes": 2956370,
+      "sha256": "cd60b6566fb4ebc9e86c4050e9389ddd5d7a9d61b8534a6d8b53e076d36f29cb"
+    },
+    {
+      "path": "screen-art/README.md",
+      "bytes": 1656,
+      "sha256": "693b582c0035830d398ca81dd5449aa25919c1c87140e0c309084ef92961555b"
+    },
+    {
+      "path": "screen-art/redstone-rush.png",
+      "bytes": 2357283,
+      "sha256": "2c5f44e8d32f1e1163db6820305ffaf6a8a6d982c4296384605ab003154dca90"
+    },
+    {
+      "path": "screen-art/reference-posters/battleforge-original.png",
+      "bytes": 3137704,
+      "sha256": "5e780fb94f3ebe60ac800ecbef85ec9883f968261606ec0771f6b71b091ab410"
+    },
+    {
+      "path": "screen-art/reference-posters/neural-nexsus-original.png",
+      "bytes": 2671714,
+      "sha256": "7a84400508ce05277d68e898b0147663f669b9db656d8b2e3349a4c8d457402b"
+    },
+    {
+      "path": "screen-art/reference-posters/nexathon-original.png",
+      "bytes": 2396915,
+      "sha256": "a53b11c25d0eea4729edbd3db90066e190f756ef7fccdcd60a86311a815155dd"
+    },
+    {
+      "path": "screen-art/reference-posters/promptx-original.png",
+      "bytes": 2820125,
+      "sha256": "603e487480b70c5dc0dcfe514860350a169831c982eca8e654a2993fae2338af"
+    },
+    {
+      "path": "screen-art/reference-posters/redstone-rush-original.png",
+      "bytes": 2882359,
+      "sha256": "85e45731becb8d8d3c3098791f2be84e0cf74e9188c2812b2486f87fa1e3b83f"
+    }
+  ],
+  "assets": [
+    {
+      "path": "/assets/models/castle.glb",
+      "bytes": 7022148,
+      "sha256": "7b2c05868f1639f44e9dbe17dc37f3ccd880534f2116c445b4eeaebdf2b32824",
+      "source": "assets/castle/castle-meshopt16-candidate.glb",
+      "format": "glb",
+      "requiredExtensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "triangles": 571150,
+      "quantization": "16-bit positions and UVs"
+    },
+    {
+      "path": "/assets/models/castle.glb.gz",
+      "bytes": 2302615,
+      "sha256": "5a215ba24ac138a136c5facf86b6e1e940925c64181cc5d95d71dce3a43e9234",
+      "source": "assets/castle/castle-meshopt16-candidate.glb.gz",
+      "contentEncoding": "gzip",
+      "uncompressedPath": "/assets/models/castle.glb"
+    },
+    {
+      "path": "/assets/models/nature/tree-1.glb",
+      "bytes": 8292,
+      "sha256": "ccec009434c8dfed9c32b0ef076d8471019eac8863f4bdbe1c408057783612f9",
+      "source": "assets/nature/tree-1.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/tree-4.glb",
+      "bytes": 23864,
+      "sha256": "234db287c7c0bef370fdb6a116c40d3d1ee15c7a1c96750c4b7078d509f1c2ce",
+      "source": "assets/nature/tree-4.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/tree-7.glb",
+      "bytes": 44776,
+      "sha256": "73b8cb3ffff0704a001f3fd18cc043d3febd7798181ae108f952a4e015bc3920",
+      "source": "assets/nature/tree-7.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/stone-1.glb",
+      "bytes": 4812,
+      "sha256": "ed479ec6a7ae8a9cb7daf480c08cf1d7ecfe1da664ad7f994008e6d2a1c92501",
+      "source": "assets/nature/stone-1.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/stone-3.glb",
+      "bytes": 9764,
+      "sha256": "0861dc19640e3f97d1090a6dd339fe736c902a62995f6b563af0968726954b3c",
+      "source": "assets/nature/stone-3.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/bush-1.glb",
+      "bytes": 7716,
+      "sha256": "f7a4e4de5fe431a65b51759a2cae1415d1182ac8f0d6b658f52975615802cd9c",
+      "source": "assets/nature/bush-1.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/forest-4.glb",
+      "bytes": 72056,
+      "sha256": "6c73a4084ed00ba10a9d666deab3e03e39127fd0fe21b199811db3df7598abaa",
+      "source": "assets/nature/forest-4.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/path-straight-3.glb",
+      "bytes": 22768,
+      "sha256": "8eb4dc1533f7bc431b4dcdb05cb740321be6aad06270f519ff6592a9c9774ed8",
+      "source": "assets/nature/path-straight-3.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/models/nature/path-curve-3.glb",
+      "bytes": 26512,
+      "sha256": "22608cad4adc159ee791a522f4b0413acc2187bc2f776cfbde6afd42afbd4711",
+      "source": "assets/nature/path-curve-3.glb",
+      "format": "glb",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "/assets/posters/neural-nexsus.webp",
+      "bytes": 386228,
+      "sha256": "e50aa9c036b175b54df3e85028f7beddf40be91416319f06293a08dba554c0bf",
+      "source": "screen-art/neural-nexsus.png",
+      "width": 1600,
+      "height": 900,
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1600
+      }
+    },
+    {
+      "path": "/assets/posters/originals/neural-nexsus.webp",
+      "bytes": 234494,
+      "sha256": "2f98663493d9d50b3b466c50a8706281d63a945249dfeb961959c8ebec41a23c",
+      "source": "screen-art/reference-posters/neural-nexsus-original.png",
+      "width": 1000,
+      "height": 1333,
+      "sourceWidth": 1086,
+      "sourceHeight": 1448,
+      "conversion": {
+        "format": "webp",
+        "quality": 86,
+        "maxWidth": 1000
+      }
+    },
+    {
+      "path": "/assets/posters/promptx.webp",
+      "bytes": 458104,
+      "sha256": "5b6935a1e87ab2ca6183f8cd584b82fefa213cd9c5dabad056bf13c6c8882883",
+      "source": "screen-art/promptx.png",
+      "width": 1600,
+      "height": 900,
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1600
+      }
+    },
+    {
+      "path": "/assets/posters/originals/promptx.webp",
+      "bytes": 240782,
+      "sha256": "06e32eb453f6acb8343667adf81f3a4a52178e869fe5ace4e097e5bfca34acb5",
+      "source": "screen-art/reference-posters/promptx-original.png",
+      "width": 1000,
+      "height": 1250,
+      "sourceWidth": 1080,
+      "sourceHeight": 1350,
+      "conversion": {
+        "format": "webp",
+        "quality": 86,
+        "maxWidth": 1000
+      }
+    },
+    {
+      "path": "/assets/posters/nexathon.webp",
+      "bytes": 374864,
+      "sha256": "1cabf79d22b2dbc4ff486680310bbf155d0264ee8a7ff5d759565174640b6719",
+      "source": "screen-art/nexathon.png",
+      "width": 1600,
+      "height": 900,
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1600
+      }
+    },
+    {
+      "path": "/assets/posters/originals/nexathon.webp",
+      "bytes": 213694,
+      "sha256": "119476a1fe5bf3b630509abd7104f2a3d367337059125be2f2d49b5efcb9b241",
+      "source": "screen-art/reference-posters/nexathon-original.png",
+      "width": 1000,
+      "height": 1252,
+      "sourceWidth": 1121,
+      "sourceHeight": 1403,
+      "conversion": {
+        "format": "webp",
+        "quality": 86,
+        "maxWidth": 1000
+      }
+    },
+    {
+      "path": "/assets/posters/redstone-rush.webp",
+      "bytes": 334696,
+      "sha256": "a24d8240d8f1c7dd43a00e6d70bce07e7fa0aac03af080cdcb605e681573df28",
+      "source": "screen-art/redstone-rush.png",
+      "width": 1600,
+      "height": 900,
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1600
+      }
+    },
+    {
+      "path": "/assets/posters/originals/redstone-rush.webp",
+      "bytes": 239840,
+      "sha256": "e760d3112b3c4906de008ca9b7976b3f91586457e5ed451104c47c46f8c2185a",
+      "source": "screen-art/reference-posters/redstone-rush-original.png",
+      "width": 1000,
+      "height": 1250,
+      "sourceWidth": 1080,
+      "sourceHeight": 1350,
+      "conversion": {
+        "format": "webp",
+        "quality": 86,
+        "maxWidth": 1000
+      }
+    },
+    {
+      "path": "/assets/posters/battleforge.webp",
+      "bytes": 427580,
+      "sha256": "b96cd18791874e2dac6444e27e54ef1432a265a3c7b1525ce02912242118db64",
+      "source": "screen-art/battleforge.png",
+      "width": 1600,
+      "height": 900,
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1600
+      }
+    },
+    {
+      "path": "/assets/posters/originals/battleforge.webp",
+      "bytes": 348482,
+      "sha256": "57aa021b1ce3b11dfc17ecc8f2d9caea3d21fb8e42a5f5c16a06ee47ec9fa89a",
+      "source": "screen-art/reference-posters/battleforge-original.png",
+      "width": 1000,
+      "height": 1250,
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "conversion": {
+        "format": "webp",
+        "quality": 86,
+        "maxWidth": 1000
+      }
+    },
+    {
+      "path": "/assets/castle-fallback.webp",
+      "bytes": 160612,
+      "sha256": "97a411e0e36e293d65b0e3658c89a1f55afd372dc32f436db9cbd04f78d1098f",
+      "source": "previews/castle-geometry-opposite.png",
+      "width": 1400,
+      "height": 892,
+      "sourceWidth": 1500,
+      "sourceHeight": 1248,
+      "conversion": {
+        "format": "webp",
+        "quality": 88,
+        "maxWidth": 1400,
+        "crop": {
+          "left": 0,
+          "top": 116,
+          "width": 1500,
+          "height": 956
+        }
+      }
+    },
+    {
+      "path": "/assets/castle-daylight.webp",
+      "bytes": 156298,
+      "sha256": "865bbd3ad59c91005be9d39b0668e4161fec16dee06c1818fef69d2a0acdb69d",
+      "source": "Raster view of patrix’s castle, CC BY-SA 4.0",
+      "width": 1512,
+      "height": 880
+    },
+    {
+      "path": "/assets/castle-map.webp",
+      "bytes": 114826,
+      "sha256": "e24eb6fcb8d761774895cdbc7fa062d48246e5ef8a5c1fe245b4c8bfc4ca70e3",
+      "source": "Top-down raster map of patrix’s castle, CC BY-SA 4.0",
+      "width": 1008,
+      "height": 1008
+    },
+    {
+      "path": "/assets/continuum-title.webp",
+      "bytes": 238982,
+      "sha256": "3060097aa4be246a9cb87551f03028b9f30d6f521457135d9bbecae18d3b5688",
+      "source": "Generated CONTINUUM 2027 raster title",
+      "width": 1700,
+      "height": 567
+    },
+    {
+      "path": "/assets/favicon.png",
+      "bytes": 305,
+      "sha256": "f589dc468fb555b13e1cdfa637320184554e15de3fb7290f97f70fa412269bfe",
+      "source": "Independent site mark created by this preparation script",
+      "width": 64,
+      "height": 64
+    },
+    {
+      "path": "/assets/fonts/dm-sans.ttf",
+      "bytes": 240164,
+      "sha256": "8cd08d97e89c24d0aa92edd2f0f4c8ee6195eee9b7c9f154865a58b02f0c1c0d",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/dmsans/DMSans%5Bopsz%2Cwght%5D.ttf",
+      "license": "OFL-1.1",
+      "modification": "None; renamed for a stable local URL"
+    },
+    {
+      "path": "/assets/fonts/dm-sans-OFL.txt",
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/dmsans/OFL.txt",
+      "license": "OFL-1.1",
+      "modification": "None; renamed for a stable local URL"
+    },
+    {
+      "path": "/assets/CREDITS.md",
+      "bytes": 6267,
+      "sha256": "ff63967b9b77d5ed4132efecb7419f68c1af75ff5599b9848ef0c40f98f728b2",
+      "source": "ASSET-CREDITS.md",
+      "additions": "Website distribution and raster conversion notices"
+    },
+    {
+      "path": "/assets/fonts/fraunces.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+      "bytes": 360440,
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+      "license": "OFL-1.1",
+      "modification": "None; renamed for a stable local URL"
+    },
+    {
+      "path": "/assets/fonts/fraunces-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/OFL.txt",
+      "bytes": 4391,
+      "sha256": "bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b",
+      "license": "OFL-1.1",
+      "modification": "None; renamed for a stable local URL"
+    }
+  ]
+}

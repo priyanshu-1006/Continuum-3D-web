@@ -1,0 +1,165 @@
+.composition {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  --hero-pointer-x: 0;
+  --hero-pointer-y: 0;
+  --hero-gate-y: 67.5%;
+  --valley-width: max(96vw, 119svh);
+  --approach-width: max(104vw, 157svh);
+  --trees-width: min(86svh, 52vw);
+}
+.backdrop, .foreground {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.backdrop { z-index: -1; }
+.foreground { z-index: 2; opacity: var(--hero-foreground-opacity, 1); }
+:global(.mode-lite) .foreground { opacity: 1; }
+:global(.mode-cinematic[data-hero-world="entered"]) .composition [data-hero-scenery] { display: none; }
+
+.sky, .clouds, .mountains, .meadow, .valley, .approach, .sunlight, .dust {
+  position: absolute;
+  pointer-events: none;
+}
+.sky { inset: -1%; }
+.sky img { width: 100%; height: 100%; object-fit: cover; object-position: 38% 44%; }
+.clouds {
+  inset: 0;
+  transform: translate3d(calc(var(--hero-pointer-x) * -5px), calc(var(--hero-pointer-y) * -3px), 0);
+}
+.clouds img {
+  position: absolute;
+  height: auto;
+  animation: cloud-float 76s ease-in-out infinite alternate;
+  animation-play-state: var(--hero-ambient-play, running);
+}
+.clouds .cloudNear {
+  top: 11%;
+  left: 11%;
+  width: min(23vw, 38svh);
+  clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 62%, 12% 62%, 12% 30%, 34% 30%);
+}
+.clouds .cloudMid { top: 15%; right: 12%; width: min(18vw, 30svh); animation-duration: 102s; animation-delay: -29s; }
+.clouds .cloudFar { top: 32%; left: 59%; width: min(9vw, 12svh); animation-duration: 121s; animation-delay: -46s; }
+@keyframes cloud-float {
+  from { transform: translateX(-10px); }
+  to { transform: translateX(19px); }
+}
+.mountains {
+  top: 21%;
+  left: 50%;
+  width: max(112vw, 182svh);
+  transform: translate3d(calc(-50% + var(--hero-pointer-x) * -8px), calc(var(--hero-pointer-y) * -4px - var(--hero-intro, 0) * 15px), 0);
+  filter: saturate(.92);
+}
+.mountains img, .valley img, .path img { width: 100%; height: auto; }
+.meadow {
+  inset: 64% 0 0;
+  background: linear-gradient(to bottom, transparent, #819750 42%, #526b32 82%, #344724);
+}
+.valley {
+  top: calc(var(--hero-gate-y) - var(--valley-width) * .244);
+  left: 50%;
+  width: var(--valley-width);
+  transform: translate3d(calc(-50% + var(--hero-pointer-x) * -11px), calc(var(--hero-pointer-y) * -6px - var(--hero-intro, 0) * 32px), 0);
+}
+.approach {
+  /* The far edge of the paving is 590 pixels down the 941-pixel source. */
+  top: calc(var(--hero-gate-y) - var(--approach-width) * .35287);
+  left: 50%;
+  width: var(--approach-width);
+  aspect-ratio: 1672 / 941;
+  transform-origin: 50% 62.7%;
+  transform: translate3d(calc(-50% + var(--hero-pointer-x) * -10px), calc(var(--hero-pointer-y) * -5px - var(--hero-intro, 0) * 11svh), 0) scale(calc(1 + var(--hero-intro, 0) * .52));
+  filter: drop-shadow(0 5px 12px rgba(54, 41, 21, .13));
+}
+.path {
+  display: block;
+  /* Keep the central paving and its inner lanterns, exposing the river banks on both sides. */
+  clip-path: polygon(28% 31%, 72% 31%, 72% 54%, 70% 56%, 71% 60%, 75% 74%, 83% 89%, 92% 100%, 8% 100%, 17% 89%, 25% 74%, 29% 60%, 30% 56%, 28% 54%);
+}
+.leftLantern, .rightLantern {
+  position: absolute;
+  top: 42%;
+  width: 8%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffba4a59, #ffaa3719 35%, transparent 70%);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  animation: lantern-breathe 6s ease-in-out infinite alternate;
+  animation-play-state: var(--hero-ambient-play, running);
+}
+.leftLantern { left: 34.5%; }
+.rightLantern { left: 65.5%; animation-delay: -2.5s; }
+@keyframes lantern-breathe {
+  from { opacity: .43; }
+  to { opacity: .8; }
+}
+.leftTree, .rightTree {
+  position: absolute;
+  bottom: -1.5svh;
+  width: var(--trees-width);
+  max-width: none;
+  height: auto;
+  filter: drop-shadow(0 6px 15px rgba(36, 33, 15, .16));
+}
+.leftTree {
+  left: calc(var(--trees-width) * -.24);
+  transform: translate3d(calc(var(--hero-pointer-x) * -22px - var(--hero-intro, 0) * 8vw), calc(var(--hero-pointer-y) * -11px + var(--hero-intro, 0) * 3svh), 0);
+}
+.rightTree {
+  right: calc(var(--trees-width) * -.24);
+  transform: translate3d(calc(var(--hero-pointer-x) * -22px + var(--hero-intro, 0) * 8vw), calc(var(--hero-pointer-y) * -11px + var(--hero-intro, 0) * 3svh), 0);
+}
+.sunlight {
+  inset: 0;
+  background: radial-gradient(ellipse at 7% 17%, #ffd6a329, transparent 36%), linear-gradient(to top, #29231529, transparent 17%);
+}
+.dust { inset: 0; }
+.dust i {
+  position: absolute;
+  top: 60%;
+  left: 21%;
+  width: 3px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff3b9;
+  box-shadow: 0 0 7px #ffeac0;
+  animation: dust-float 12s ease-in-out infinite alternate;
+  animation-play-state: var(--hero-ambient-play, running);
+}
+.dust i:nth-child(2) { top: 54%; left: 14%; animation-delay: -3s; }
+.dust i:nth-child(3) { top: 72%; left: 30%; animation-delay: -6s; }
+.dust i:nth-child(4) { top: 66%; left: 69%; animation-delay: -2s; }
+.dust i:nth-child(5) { top: 78%; left: 78%; animation-delay: -7s; }
+@keyframes dust-float {
+  from { opacity: .15; transform: translate3d(-6px, 8px, 0); }
+  to { opacity: .65; transform: translate3d(10px, -20px, 0); }
+}
+
+.composition[data-motion="false"] { --hero-ambient-play: paused; }
+@media (max-width: 1023px) {
+  .composition { --trees-width: min(81svh, 53vw); }
+  .leftTree { left: calc(var(--trees-width) * -.23); }
+  .rightTree { right: calc(var(--trees-width) * -.23); }
+}
+@media (max-width: 767px) {
+  .composition { --valley-width: max(150vw, 78svh); --approach-width: 157svh; --trees-width: 48svh; }
+  .sky img { object-position: 39% center; }
+  .mountains { top: 29%; width: max(200vw, 145svh); }
+  .clouds .cloudNear { top: 14%; left: 4%; width: 33vw; }
+  .clouds .cloudMid { top: 28%; right: 5%; width: 27vw; }
+  .clouds .cloudFar { top: 35%; left: 17%; width: 17vw; }
+  .leftTree { left: calc(var(--trees-width) * -.47); }
+  .rightTree { right: calc(var(--trees-width) * -.47); }
+  .dust { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .composition { --hero-intro: 0; }
+  .clouds img, .dust i, .leftLantern, .rightLantern { animation: none; }
+  .dust { display: none; }
+}
