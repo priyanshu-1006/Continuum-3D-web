@@ -11,7 +11,7 @@ const publicRoot = path.join(root, 'public');
 const manifest = JSON.parse(await fs.readFile(path.join(root, 'lib/asset-manifest.json'), 'utf8'));
 
 function publicFile(uri) {
-  assert.ok(/^\/(?:assets|continuum\/(?:layers|events|chrome|destinations))\//.test(uri), `Unexpected public asset URI: ${uri}`);
+  assert.ok(/^\/(?:assets|continuum\/(?:layers|events|chrome|destinations|people))\//.test(uri), `Unexpected public asset URI: ${uri}`);
   const filename = path.resolve(publicRoot, `.${uri}`);
   assert.ok(filename.startsWith(publicRoot + path.sep), `Asset URI escapes public: ${uri}`);
   return filename;
@@ -92,7 +92,7 @@ test('literal public asset URLs referenced by the app resolve locally', async ()
   const checked = new Set();
   for (const filename of files) {
     const contents = await fs.readFile(filename, 'utf8');
-    for (const match of contents.matchAll(/["'`](\/(?:assets|continuum\/(?:layers|events|chrome|destinations))\/[^"'`\s]*)["'`]/g)) {
+    for (const match of contents.matchAll(/["'`](\/(?:assets|continuum\/(?:layers|events|chrome|destinations|people))\/[^"'`\s]*)["'`]/g)) {
       if (match[1].includes('${')) continue;
       const uri = match[1].split(/[?#]/, 1)[0];
       if (checked.has(uri)) continue;

@@ -724,10 +724,10 @@
     },
     {
       "path": "/assets/CREDITS.md",
-      "bytes": 6267,
-      "sha256": "ff63967b9b77d5ed4132efecb7419f68c1af75ff5599b9848ef0c40f98f728b2",
+      "bytes": 7898,
+      "sha256": "8519e2a1bf54ba0d85a3c398866719122b8f447359de252c7f33cb811fc37052",
       "source": "ASSET-CREDITS.md",
-      "additions": "Website distribution and raster conversion notices"
+      "additions": "Website distribution, raster conversion, castle quest and campus asset notices"
     },
     {
       "path": "/assets/fonts/fraunces.ttf",
@@ -744,6 +744,326 @@
       "sha256": "bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b",
       "license": "OFL-1.1",
       "modification": "None; renamed for a stable local URL"
+    },
+    {
+      "path": "/assets/explore/animal-cat.glb",
+      "bytes": 179560,
+      "sha256": "b95482ac4795ef37742101e4ada922e2518b0f030fb1e082a7c35c63c06b7e1d",
+      "source": "https://kenney.nl/assets/cube-pets",
+      "license": "CC0-1.0",
+      "modification": "Embedded original texture in GLB"
+    },
+    {
+      "path": "/assets/explore/barrel.glb",
+      "bytes": 12752,
+      "sha256": "02ff13cb314a47d052c86f39bf63cb31868c91313b15934c0257112bd99b772d",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/brazier.glb",
+      "bytes": 37612,
+      "sha256": "5a3e673085488d9bf9612ebcf36f443daa1df213f0c34e4a9ef04bd7b893dfe4",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/cart.glb",
+      "bytes": 67768,
+      "sha256": "fef4185afff6bddbdb684602665405b476a8a725f44f17740653d830f850dbae",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded original texture in GLB"
+    },
+    {
+      "path": "/assets/explore/creak2.ogg",
+      "bytes": 19012,
+      "sha256": "8a990afdc03aebb91d528f5385e2f95582dbfa8e2c12c71098ab01be9142294a",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/crystal-altar.glb",
+      "bytes": 30508,
+      "sha256": "36385bfa1ffca8fe1732a9b435f1b12878dc951faf2efda58f30532c2ac686ff",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/doorOpen_1.ogg",
+      "bytes": 22848,
+      "sha256": "4ab93bab96522d8eb109ff96dc57cb6765deb02448fe14c10472084be5bb2a0b",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/flag-banner-long.glb",
+      "bytes": 16692,
+      "sha256": "870854177aa44866cdf5fa0ff257a9a540195b201b5f0d310d16b07a768fd90a",
+      "source": "https://kenney.nl/assets/castle-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded original texture in GLB"
+    },
+    {
+      "path": "/assets/explore/footstep00.ogg",
+      "bytes": 9475,
+      "sha256": "6fe61ef1fc3bcf0e253bf2eb64759db6cb69e2fe452f4d88cc597ecf78a3d601",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/footstep03.ogg",
+      "bytes": 10559,
+      "sha256": "a86756b9af9f370455ab47844239bb07fd1bee7a113068c91f0fcd9b72703fae",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/footstep06.ogg",
+      "bytes": 9885,
+      "sha256": "6cabfe7ae95d227a84066c6e17014ac31cc7c89b14ef51d7877e98352d4a64fb",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/handleCoins.ogg",
+      "bytes": 25394,
+      "sha256": "8a91f969e932df709df80ee124d86a51389eed9b67f22e5e716bc2bbf60d8dab",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/lantern.glb",
+      "bytes": 29840,
+      "sha256": "4a96bde7c273d012db3e07ea1091bd4fc0d95be37aa076fe708fb888ac96e23c",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded original texture in GLB"
+    },
+    {
+      "path": "/assets/explore/lever.glb",
+      "bytes": 12384,
+      "sha256": "9e152575138e8c9c7d63aabf2aa02dde2f38920886a99a159eb9e4d41adffb24",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/metalClick.ogg",
+      "bytes": 13615,
+      "sha256": "9851a69d0c613e13bceef08060ecc4148f098ef487927cbebe270d642398a3b3",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/metalLatch.ogg",
+      "bytes": 10208,
+      "sha256": "ba9ba60b172b3ebc131a940f25793cd2e207aca7af73dc80d637277f060f1708",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/portcullis.glb",
+      "bytes": 57748,
+      "sha256": "1a3e02ad9cb70440e637e407d16908e96e31c95702b03ca91483251244a7c842",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/explore/stall-red.glb",
+      "bytes": 39164,
+      "sha256": "1d558b029877451f560fd058dabacb96ef07ec89cdd9a66895dab924221ccaa6",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded original texture in GLB"
+    },
+    {
+      "path": "/assets/explore/treasure-chest.glb",
+      "bytes": 30460,
+      "sha256": "34ce63b0c3c536da20d3c86439bbd4d2420ffd37d3313ef15930fa73549b22f0",
+      "source": "https://1camou.itch.io/dungeon-starter-blockimagine",
+      "license": "CC0-1.0",
+      "modification": "None"
+    },
+    {
+      "path": "/assets/campus/building-sample-house-a.glb",
+      "bytes": 35920,
+      "sha256": "5e1cb8d7cf36c7038dfd8d5df02d8e0f74b370dd408af7955b91e906cc84b130",
+      "source": "https://kenney.nl/assets/modular-buildings",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/building-sample-house-b.glb",
+      "bytes": 41372,
+      "sha256": "9e0a55a213cd37507c2f7b60342f2501b1e0263f3b698fd3ab7ed0c2434149bb",
+      "source": "https://kenney.nl/assets/modular-buildings",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/building-sample-house-c.glb",
+      "bytes": 39136,
+      "sha256": "82b5d34c7f0f0708588a0eefda47bb7aa01ef0a777e75bbef072a556eb8dd962",
+      "source": "https://kenney.nl/assets/modular-buildings",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/desk.glb",
+      "bytes": 15048,
+      "sha256": "0164fe828f028b321730fb8c74502e353583f751be74da1682d42fff7d3c5a42",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/chairDesk.glb",
+      "bytes": 39016,
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/computerScreen.glb",
+      "bytes": 6404,
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/bookcaseOpen.glb",
+      "bytes": 18020,
+      "sha256": "750702218d68c062b15dfef6ab06a4014d1cfa8bd05f02e57c53b7e13bec157c",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/bench.glb",
+      "bytes": 10756,
+      "sha256": "ba05a6d23a5a5a44da016757632070e47ff7587ce10e2f6d6d52328b4cf5489b",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/books.glb",
+      "bytes": 6864,
+      "sha256": "b8dc56e5d29f6fc1f4727fccb1b9642627fee9942c48060a00034e98df02701c",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/fountain-round.glb",
+      "bytes": 96044,
+      "sha256": "f6e651c30b9a394dd36551dcbafff7e25d57d42df664497fe516a1a0f5ea46c9",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/fountain-center.glb",
+      "bytes": 14484,
+      "sha256": "e654d1b2df17f5fae1232e3bf4196751dff87d32cb39f2f7b4b4fa73b3ba71ae",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/stall-red.glb",
+      "bytes": 35504,
+      "sha256": "3c6dcbb858496c7c2298e2ddc4c5bafd2485cbe857bd31f5bab9f2fb687df0c6",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/cart.glb",
+      "bytes": 64112,
+      "sha256": "a3d10c27fc0526d19e63ee0d58ef7de9b6727c7c73d50552e2866cf6d5104754",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/lantern.glb",
+      "bytes": 26184,
+      "sha256": "cf59088c827d07676dce2663f6ae87f66155a156a9bdde6b34bfcc2dab89aabc",
+      "source": "https://kenney.nl/assets/fantasy-town-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/flag-banner-long.glb",
+      "bytes": 14244,
+      "sha256": "b816d00b4403dd07fed6bb5517bfe8c76e956324aec1c0aca3369417c24c366e",
+      "source": "https://kenney.nl/assets/castle-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/tower-square-roof.glb",
+      "bytes": 21620,
+      "sha256": "b53d3b1c6a4ffa05736d4b4c810394788690de63eaf6254c6dbb4f917afe285e",
+      "source": "https://kenney.nl/assets/castle-kit",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/character-a.glb",
+      "bytes": 133632,
+      "sha256": "91527c1050a2b55a86b5cc34dec280f85ebd945e0fe6127f6ceea852b495e771",
+      "source": "https://kenney.nl/assets/blocky-characters",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/character-e.glb",
+      "bytes": 127972,
+      "sha256": "af17bcd58c966f690fb920d85243f8dd7ecb60f7c9431d2800f9555f77e7db08",
+      "source": "https://kenney.nl/assets/blocky-characters",
+      "license": "CC0-1.0",
+      "modification": "Embedded companion textures when required"
+    },
+    {
+      "path": "/assets/campus/mmmut-gate.glb",
+      "bytes": 3072200,
+      "sha256": "2191a5ac486b535d1c2a60ada3dcdf288ba6fc0f0aec776f290ce92bc2d8d60b",
+      "source": "https://sketchfab.com/3d-models/jurassic-park-gate-3b7728e476544f6c99c99da5a34bea1d",
+      "license": "CC-BY-4.0",
+      "modification": "Mat Jolicoeur. Removed raised lettering, separated hinged leaves, grounded and repacked."
+    },
+    {
+      "path": "/assets/campus/mmmut-crest.webp",
+      "bytes": 72400,
+      "sha256": "12e353c233131c6ba0502f17ad3b29e7b96a762c46faa8ccfadea848e02522ec",
+      "source": "https://www.mmmut.ac.in/images/largelogo.jpg",
+      "license": "MMMUT university crest",
+      "modification": "Resized and encoded as WebP"
+    },
+    {
+      "path": "/continuum/people/vice-chancellor.webp",
+      "bytes": 16094,
+      "sha256": "7f7e7e28baabb75156fcc89ad3e2de0b462dc42008b79b1b024674fc5a064b14",
+      "source": "https://www.mmmut.ac.in/images/Prof.AnupamaKaushikSharma.png",
+      "license": "MMMUT official portrait",
+      "modification": "Resized and encoded as WebP"
     }
   ]
 }

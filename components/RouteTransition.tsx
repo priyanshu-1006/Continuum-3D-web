@@ -14,6 +14,7 @@ const pageNames: Readonly<Record<string, string>> = {
   '/contact': 'the Dispatch Tower',
   '/sign-in': 'the Gatehouse',
   '/explore': 'the Castle Hunt',
+  '/campus': 'MMMUT Campus',
 };
 const eventPath = /^\/events\/[^/]+\/?$/;
 const desktopScene = '/continuum/destinations/portal.webp';

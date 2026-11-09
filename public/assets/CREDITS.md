@@ -34,12 +34,12 @@ The creative brief contains these attributed castle previews. This notice identi
 - Local source: PathAndTerrain-GodotDemoScenes/assets
 - Preparation: a curated subset repackaged from source glTF with companion buffers/textures into standalone GLBs; see assets/nature for exact files and validation. No entire Godot demo is bundled.
 
-## Optional audio researched, not included
+## Optional ambience and interface audio
 
 - Interface Sounds by Kenney: https://kenney.nl/assets/interface-sounds - creator lists CC0.
 - Forest Ambience by TinyWorlds: https://opengameart.org/content/forest-ambience - creator-uploaded CC0 loop.
 
-Verify and retain licence information with any eventual download. No optional audio is bundled. Five original event posters supplied by the user are preserved unchanged, and five raster adaptations were generated from them with built-in image_gen. The full prompts and references are recorded in screen-art/IMAGEGEN-PROMPTS.json. These adaptations do not reuse the castle GLB and are not assigned its ShareAlike licence by this notice. User-supplied brand/poster rights remain with their applicable owners; no new institutional endorsement or approval is asserted. Generative badge lettering is not a replacement for exact official logo artwork. The earlier SVG event-screen concepts are not included in the delivery package.
+Five original event posters supplied by the user are preserved unchanged, and five raster adaptations were generated from them with built-in image_gen. The full prompts and references are recorded in screen-art/IMAGEGEN-PROMPTS.json. These adaptations do not reuse the castle GLB and are not assigned its ShareAlike licence by this notice. User-supplied brand/poster rights remain with their applicable owners; no new institutional endorsement or approval is asserted. Generative badge lettering is not a replacement for exact official logo artwork. The earlier SVG event-screen concepts are not included in the delivery package.
 
 ## Website distribution notes
 
@@ -51,7 +51,19 @@ The `castle-fallback.webp` image is a cropped, resized WebP adaptation of the pa
 
 Nine Kytric GLBs are copied without changes. The five generated raster event-screen adaptations are only resized and encoded as WebP at quality 88. The five user-supplied reference posters are only resized and encoded as WebP at quality 86 in `posters/originals`; their original PNG files in the preparation package remain unchanged. Full image-generation prompts remain in the supplied preparation package. Generative badge lettering is not a guarantee of official institutional logo fidelity. The raster site favicon is independent geometric artwork made for the website.
 
-No optional audio is bundled. This asset notice applies to the named artwork and models; it does not assign the castle license to unrelated website code or independent branding.
+This asset notice applies to the named artwork and models; it does not assign the castle license to unrelated website code or independent branding.
+
+## Castle Relic Hunt
+
+- 1CAMOU’s Dungeon Starter chest, lever, portcullis, brazier, barrel and crystal altar are used under CC0. Source and creator’s AI disclosure: https://1camou.itch.io/dungeon-starter-blockimagine.
+- Kenney’s Castle Kit banner, Fantasy Town Kit cart, stall and lantern, and Cube Pets cat are used under CC0. Their original textures are embedded in the runtime GLBs. Sources: https://kenney.nl/assets/castle-kit, https://kenney.nl/assets/fantasy-town-kit, https://kenney.nl/assets/cube-pets.
+- Footstep, creak, door, coin and metal sound cues are from Kenney’s RPG Audio pack under CC0. Source: https://kenney.nl/assets/rpg-audio.
+
+## MMMUT campus
+
+- The campus gate adapts [Jurassic Park Gate by Mat Jolicoeur](https://sketchfab.com/3d-models/jurassic-park-gate-3b7728e476544f6c99c99da5a34bea1d) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The raised title was removed, the leaves were separated at their hinges, and the model was grounded and repacked. The bilingual sign was made for CONTINUUM.
+- The university crest and the portrait of the Vice-Chancellor come from MMMUT’s official site. Both images were resized and encoded as WebP. [University crest](https://www.mmmut.ac.in/images/largelogo.jpg) · [University portrait](https://www.mmmut.ac.in/images/Prof.AnupamaKaushikSharma.png)
+- Selected campus models from Kenney’s [Modular Buildings](https://kenney.nl/assets/modular-buildings), [Furniture Kit](https://kenney.nl/assets/furniture-kit), [Fantasy Town Kit](https://kenney.nl/assets/fantasy-town-kit), [Castle Kit](https://kenney.nl/assets/castle-kit), and [Blocky Characters](https://kenney.nl/assets/blocky-characters) are used under CC0. Companion textures were embedded in the GLB files.
 
 ## Locally bundled fonts
 

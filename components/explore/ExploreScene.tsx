@@ -2,24 +2,33 @@
 
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Color, Group, Mesh, Vector3, type Material } from 'three';
+import { Color, Group, MathUtils, Mesh, Vector3, type Material } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { advanceExplorer, createCastleCollision, CROUCH_HEIGHT, newExplorer, STAND_HEIGHT, type CastleCollision, type ExploreFeedback } from '@/lib/explore-physics';
-import { EXPLORE_BLOCKS, RELICS, type Relic, type RelicId } from '@/lib/explore-world';
+import { advanceExplorer, canVault, createCastleCollision, CROUCH_HEIGHT, newExplorer, STAND_HEIGHT, type CastleCollision, type ExploreFeedback } from '@/lib/explore-physics';
+import { EXPLORE_BLOCKS, QUEST_CHECKPOINTS, QUEST_INTERACTABLES, RELICS, type CheckpointId, type QuestInteractableId, type Relic, type RelicId } from '@/lib/explore-world';
+import type { QuestCue, QuestProgress } from '@/lib/explore-progress';
 import type { WorldPoint } from '@/lib/journey';
 import { MOVEMENT_KEYS, type ExploreInput, type MoveControl } from './controls';
+import QuestScenery from './QuestScenery';
+import ExplorerGuide, { type GuideParts } from './ExplorerGuide';
 
 export type ExploreSceneProps = {
   retry: boolean;
   inputRef: RefObject<ExploreInput>;
   playing: boolean;
+  intro: boolean;
   found: ReadonlySet<RelicId>;
+  progress: QuestProgress;
+  sensitivity: number;
   onReady: () => void;
   onError: () => void;
   onCollect: (relic: Relic) => void;
   onFeedback: (feedback: ExploreFeedback) => void;
-  onCrouch: (crouched: boolean) => void;
+  onInteract: (id: QuestInteractableId) => void;
+  onCheckpoint: (id: CheckpointId) => void;
+  onActionLabel: (label: string | null) => void;
+  onSound: (cue: QuestCue) => void;
 };
 
 function configureLoader(loader: GLTFLoader) {
@@ -38,7 +47,7 @@ function createVisibleCastle(source: Group) {
   wrapper.position.set(-.25, -9, 0);
   wrapper.add(source.clone(true));
   const materials = new Map<Material, Material>();
-  const tone = new Color(1.43, 1.43, 1.43);
+  const tone = new Color(1.60, 1.55, 1.48);
   const brighten = (material: Material) => {
     const cached = materials.get(material);
     if (cached) return cached;
@@ -53,13 +62,22 @@ function createVisibleCastle(source: Group) {
   return { wrapper, materials };
 }
 
-function RelicMarkers({ found }: { found: ReadonlySet<RelicId> }) {
+function relicAvailable(id: RelicId, progress: QuestProgress) {
+  if (id === 'gate-seal') return progress.gateOpen;
+  if (id === 'wayfinder') return progress.bridgeStep === 2;
+  return true;
+}
+
+function RelicMarkers({ found, progress }: Pick<ExploreSceneProps, 'found' | 'progress'>) {
   return <group>
-    {RELICS.filter(relic => !found.has(relic.id)).map(relic => <group key={relic.id} position={relic.position}>
+    {RELICS.filter(relic => !found.has(relic.id) && relicAvailable(relic.id, progress)).map(relic => <group key={relic.id} position={relic.position}>
       <mesh rotation={[.12, .6, .18]}>
-        <octahedronGeometry args={[.155, 0]} />
-        <meshStandardMaterial color={relic.color} emissive={relic.color} emissiveIntensity={.48} roughness={.37} />
+        {relic.id === 'sunstone' ? <octahedronGeometry args={[.18, 0]} /> : <boxGeometry args={[.24, .24, .11]} />}
+        <meshStandardMaterial color={relic.color} emissive={relic.color} emissiveIntensity={.74} roughness={.37} />
       </mesh>
+      {relic.id === 'moon-key' && <Voxel position={[0, -.15, 0]} size={[.068, .20, .065]} color={relic.color} />}
+      {relic.id === 'wayfinder' && <Voxel position={[0, .035, -.071]} size={[.044, .18, .021]} color="#284d57" />}
+      {relic.id === 'warden-crown' && [-.09, 0, .09].map(x => <Voxel key={x} position={[x, .13, 0]} size={[.062, .09, .12]} color={relic.color} />)}
       <mesh position={[0, -.18, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[.14, .17, 12]} />
         <meshBasicMaterial color={relic.color} transparent opacity={.52} depthWrite={false} />
@@ -72,47 +90,39 @@ function RelicMarkers({ found }: { found: ReadonlySet<RelicId> }) {
   </group>;
 }
 
-type GuideParts = {
-  body: RefObject<Group | null>;
-  leftArm: RefObject<Group | null>;
-  rightArm: RefObject<Group | null>;
-  leftLeg: RefObject<Group | null>;
-  rightLeg: RefObject<Group | null>;
-};
-
-function ExplorerGuide({ parts }: { parts: GuideParts }) {
-  return <group ref={parts.body}>
-    <Voxel position={[0, .66, 0]} size={[.355, .35, .21]} color="#385f46" />
-    <Voxel position={[0, .49, 0]} size={[.36, .057, .22]} color="#262f27" />
-    <Voxel position={[0, .65, -.152]} size={[.277, .29, .12]} color="#304138" />
-    <Voxel position={[0, .68, -.22]} size={[.114, .106, .016]} color="#cfdf85" />
-    <Voxel position={[.209, .56, .01]} size={[.13, .15, .17]} color="#9a7248" />
-    <Voxel position={[0, 1.003, 0]} size={[.287, .29, .284]} color="#c3916a" />
-    <Voxel position={[0, 1.13, -.012]} size={[.304, .087, .304]} color="#2f2e26" />
-    <Voxel position={[0, 1.045, -.133]} size={[.303, .15, .043]} color="#2f2e26" />
-    <Voxel position={[-.059, 1.01, .146]} size={[.032, .034, .014]} color="#242f29" />
-    <Voxel position={[.059, 1.01, .146]} size={[.032, .034, .014]} color="#242f29" />
-    {[parts.leftArm, parts.rightArm].map((ref, index) => <group key={index} ref={ref} position={[index ? -.215 : .215, .79, 0]}>
-      <Voxel position={[0, -.16, 0]} size={[.127, .32, .16]} color="#31583e" />
-      <Voxel position={[0, -.347, 0]} size={[.12, .075, .15]} color="#c3916a" />
-    </group>)}
-    {[parts.leftLeg, parts.rightLeg].map((ref, index) => <group key={index} ref={ref} position={[index ? -.097 : .097, .47, 0]}>
-      <Voxel position={[0, -.188, 0]} size={[.145, .376, .16]} color="#424941" />
-      <Voxel position={[0, -.417, .024]} size={[.15, .105, .222]} color="#3c3329" />
-    </group>)}
-  </group>;
-}
-
 function isHeld(input: ExploreInput, direction: MoveControl) {
-  return input.touch.has(direction) || MOVEMENT_KEYS[direction].some(key => input.keys.has(key));
+  return MOVEMENT_KEYS[direction].some(key => input.keys.has(key));
 }
 
-function ExplorerSimulation({ inputRef, playing, found, onCollect, onFeedback, onCrouch, collision }: Omit<ExploreSceneProps, 'retry' | 'onReady' | 'onError'> & { collision: CastleCollision }) {
+const checkpoints = Object.entries(QUEST_CHECKPOINTS) as [CheckpointId, (typeof QUEST_CHECKPOINTS)[CheckpointId]][];
+const interactables = Object.values(QUEST_INTERACTABLES);
+const ESTABLISHING_POSITION = new Vector3(5.5, 7.5, -43);
+const ESTABLISHING_TARGET = new Vector3(0, 4.1, -15);
+
+function interactionAvailable(id: QuestInteractableId, progress: QuestProgress) {
+  if (id === 'chest') return !progress.chestOpen;
+  if (id === 'gate-lever') return !progress.gateOpen;
+  if (id === 'bridge-left' || id === 'bridge-right') return progress.bridgeStep < 2;
+  if (id === 'altar') return !progress.beaconLit;
+  return progress.beaconLit && !progress.secretFound;
+}
+
+function near(feet: Vector3, point: WorldPoint, range: number) {
+  return Math.abs(feet.y - point[1]) < .45 && Math.hypot(feet.x - point[0], feet.z - point[2]) <= range;
+}
+
+function ExplorerSimulation({
+  inputRef, playing, intro, found, progress, sensitivity, onCollect, onFeedback,
+  onInteract, onCheckpoint, onActionLabel, onSound, collision,
+}: Omit<ExploreSceneProps, 'retry' | 'onReady' | 'onError'> & { collision: CastleCollision }) {
   const { camera, invalidate } = useThree();
   const player = useRef(newExplorer());
   const cameraYaw = useRef(0), cameraPitch = useRef(.31), boom = useRef(3.3);
-  const resetSeen = useRef(inputRef.current.reset);
-  const previousCrouch = useRef(false), walkPhase = useRef(0), swing = useRef(0);
+  const resetSeen = useRef(-1);
+  const walkPhase = useRef(0), swing = useRef(0);
+  const footstepDistance = useRef(0), nextVaultCheck = useRef(0), vaultAvailable = useRef(false);
+  const lastAction = useRef<string | null>(null);
+  const establishing = useRef(1);
   const touched = useRef(new Set<RelicId>());
   const guide: GuideParts = {
     body: useRef<Group>(null), leftArm: useRef<Group>(null), rightArm: useRef<Group>(null),
@@ -131,55 +141,98 @@ function ExplorerSimulation({ inputRef, playing, found, onCollect, onFeedback, o
     invalidate();
     return () => { if (input.wake === invalidate) input.wake = undefined; };
   }, [inputRef, invalidate]);
-  useEffect(() => { invalidate(); }, [playing, found, invalidate]);
+  useEffect(() => { invalidate(); }, [playing, intro, found, progress, invalidate]);
 
-  useFrame((_, rawDelta) => {
+  useFrame(({ clock }, rawDelta) => {
     const dt = Math.min(rawDelta, .055);
     const input = inputRef.current;
+    collision.gateClosed = !progress.gateOpen;
     if (input.reset !== resetSeen.current) {
       resetSeen.current = input.reset;
-      player.current = newExplorer();
-      cameraYaw.current = 0;
+      const spawn = QUEST_CHECKPOINTS[input.respawn];
+      player.current = newExplorer(spawn.position, spawn.yaw);
+      cameraYaw.current = spawn.yaw;
       cameraPitch.current = .31;
       boom.current = 3.3;
+      footstepDistance.current = 0;
+      vaultAvailable.current = false;
+      nextVaultCheck.current = 0;
+      lastAction.current = null;
       touched.current.clear();
     }
     const state = player.current;
+    establishing.current = intro ? 1 : Math.max(0, establishing.current - dt / .65);
     const turning = Number(input.keys.has('KeyQ')) - Number(input.keys.has('KeyR'));
     if (playing) {
-      cameraYaw.current += input.lookX * .006 + turning * dt * 1.6;
-      cameraPitch.current = Math.max(.13, Math.min(.9, cameraPitch.current + input.lookY * .004));
+      cameraYaw.current += input.lookX * .006 * sensitivity + turning * dt * 1.6;
+      cameraPitch.current = MathUtils.clamp(cameraPitch.current + input.lookY * .004 * sensitivity, -.28, .88);
+      if (input.recenter) {
+        cameraYaw.current = state.yaw;
+        cameraPitch.current = .31;
+      }
     }
     input.lookX = 0;
     input.lookY = 0;
+    input.recenter = false;
 
-    const ahead = Number(isHeld(input, 'forward')) - Number(isHeld(input, 'back'));
-    const across = Number(isHeld(input, 'right')) - Number(isHeld(input, 'left'));
+    const ahead = Number(isHeld(input, 'forward')) - Number(isHeld(input, 'back')) + input.moveY;
+    const across = Number(isHeld(input, 'right')) - Number(isHeld(input, 'left')) + input.moveX;
     const yaw = cameraYaw.current;
     direction.set(Math.sin(yaw) * ahead - Math.cos(yaw) * across, 0, Math.cos(yaw) * ahead + Math.sin(yaw) * across);
     if (direction.lengthSq() > 1) direction.normalize();
     before.copy(state.feet);
+    let returned = false;
+    const wasAirborne = !state.grounded && state.velocity.y < -1.65;
     if (playing) {
+      const action = interactables.find(item => interactionAvailable(item.id, progress) && near(state.feet, item.approach, item.range));
+      const respawn = QUEST_CHECKPOINTS[progress.checkpoint];
+      if (input.vault && action) onInteract(action.id);
       const feedback = advanceExplorer(state, collision, {
         direction,
         crouch: input.touchCrouch || input.keys.has('KeyC'),
         jump: input.jump,
-        vault: input.vault,
-      }, dt);
+        vault: input.vault && !action,
+        sprint: input.keys.has('ShiftLeft') || input.keys.has('ShiftRight'),
+      }, dt, respawn.position, respawn.yaw);
       if (feedback) onFeedback(feedback);
-      if (feedback === 'returned') { cameraYaw.current = 0; cameraPitch.current = .31; boom.current = 3.3; }
-      if (state.crouched !== previousCrouch.current) {
-        previousCrouch.current = state.crouched;
-        onCrouch(state.crouched);
+      if (feedback === 'returned') {
+        returned = true;
+        cameraYaw.current = respawn.yaw;
+        cameraPitch.current = .31;
+        boom.current = 3.3;
+        footstepDistance.current = 0;
       }
       input.jump = false;
       input.vault = false;
+
+      if (state.grounded && !returned) {
+        const checkpoint = checkpoints.find(([, spot]) => near(state.feet, spot.position, spot.radius));
+        if (checkpoint && checkpoint[0] !== progress.checkpoint) onCheckpoint(checkpoint[0]);
+      }
+      const active = interactables.find(item => interactionAvailable(item.id, progress) && near(state.feet, item.approach, item.range));
+      if (!active && clock.elapsedTime >= nextVaultCheck.current) {
+        vaultAvailable.current = canVault(state, collision);
+        nextVaultCheck.current = clock.elapsedTime + .095;
+      }
+      const label = active?.label ?? (vaultAvailable.current && state.grounded && !state.crouched ? 'Vault' : null);
+      if (label !== lastAction.current) {
+        lastAction.current = label;
+        onActionLabel(label);
+      }
     }
 
-    const travelled = Math.hypot(state.feet.x - before.x, state.feet.z - before.z);
+    const travelled = returned ? 0 : Math.hypot(state.feet.x - before.x, state.feet.z - before.z);
+    if (playing && state.grounded) {
+      if (wasAirborne && !returned) onSound('land');
+      footstepDistance.current += travelled;
+      if (footstepDistance.current > (state.crouched ? .8 : .61)) {
+        footstepDistance.current = 0;
+        onSound('step');
+      }
+    }
     walkPhase.current += travelled * 10.8;
     const height = state.crouched ? CROUCH_HEIGHT : STAND_HEIGHT;
-    const step = Math.sin(walkPhase.current) * Math.min(.45, travelled / Math.max(dt, .001) * .14);
+    const step = state.grounded ? Math.sin(walkPhase.current) * Math.min(.57, travelled / Math.max(dt, .001) * .14) : -.22;
     swing.current += (step - swing.current) * (1 - Math.exp(-dt * 22));
     if (guide.body.current) {
       guide.body.current.position.copy(state.feet);
@@ -199,6 +252,9 @@ function ExplorerSimulation({ inputRef, playing, found, onCollect, onFeedback, o
     const room = obstruction ? Math.max(.12, obstruction.distance - .16) : 3.3;
     boom.current = room < boom.current ? room : boom.current + (room - boom.current) * (1 - Math.exp(-dt * 11));
     camera.position.copy(target).addScaledVector(offset, boom.current);
+    const blend = MathUtils.smoothstep(establishing.current, 0, 1);
+    camera.position.lerp(ESTABLISHING_POSITION, blend);
+    target.lerp(ESTABLISHING_TARGET, blend);
     camera.lookAt(target);
     if (guide.body.current) guide.body.current.visible = boom.current > .38;
 
@@ -206,7 +262,7 @@ function ExplorerSimulation({ inputRef, playing, found, onCollect, onFeedback, o
       target.copy(state.feet);
       target.y += height * .55;
       for (const relic of RELICS) {
-        if (found.has(relic.id) || touched.current.has(relic.id)) continue;
+        if (!relicAvailable(relic.id, progress) || found.has(relic.id) || touched.current.has(relic.id)) continue;
         if ('minFeet' in relic && state.feet.y < relic.minFeet) continue;
         collectible.set(...relic.position);
         if (Math.hypot(state.feet.x - collectible.x, state.feet.z - collectible.z) > .48 || Math.abs(target.y - collectible.y) > .58) continue;
@@ -219,9 +275,9 @@ function ExplorerSimulation({ inputRef, playing, found, onCollect, onFeedback, o
       }
     }
 
-    const drifting = Math.abs(room - boom.current) > .008 || Math.abs(swing.current) > .008;
-    const moving = input.keys.size > 0 || input.touch.size > 0 || !state.grounded || !!state.vault || state.velocity.lengthSq() > .0005;
-    if (drifting || (playing && moving)) invalidate();
+    const drifting = Math.abs(room - boom.current) > .008 || (state.grounded && Math.abs(swing.current) > .008);
+    const moving = input.keys.size > 0 || direction.lengthSq() > .0005 || !state.grounded || !!state.vault || state.velocity.lengthSq() > .0005;
+    if ((!intro && establishing.current > 0) || drifting || (playing && moving)) invalidate();
   });
 
   return <ExplorerGuide parts={guide} />;
@@ -255,7 +311,8 @@ function CastleLevel(props: ExploreSceneProps) {
   return <>
     <primitive object={castle.wrapper} dispose={null} />
     {EXPLORE_BLOCKS.map((block, index) => <Voxel key={index} position={block.position} size={block.size} color={block.color} />)}
-    <RelicMarkers found={props.found} />
+    <QuestScenery found={props.found} progress={props.progress} playing={props.playing} />
+    <RelicMarkers found={props.found} progress={props.progress} />
     {collision && <ExplorerSimulation {...props} collision={collision} />}
   </>;
 }
@@ -296,8 +353,7 @@ export default function ExploreScene(props: ExploreSceneProps) {
       frameloop="demand"
       dpr={quality === 'compact' ? 1 : [1, 1.3]}
       gl={{ antialias: quality === 'full', powerPreference: 'high-performance' }}
-      camera={{ position: [0, 1.97, -29.4], fov: quality === 'compact' ? 76 : 66, near: .045, far: 140 }}
-      fallback={<p>This browser could not open the castle.</p>}
+      camera={{ position: ESTABLISHING_POSITION, fov: quality === 'compact' ? 76 : 66, near: .045, far: 140 }}
     >
       <color attach="background" args={['#9ec9dd']} />
       <fog attach="fog" args={['#9ec9dd', 62, 131]} />

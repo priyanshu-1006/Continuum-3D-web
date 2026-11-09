@@ -46,6 +46,15 @@ assert.ok(gameMarkup.includes('Castle Relic Hunt') && gameMarkup.includes('Relic
 assert.ok(gameMarkup.includes('href="/"') && gameMarkup.includes('Castle tour'));
 checks.push('Home tour links to the playable castle hunt');
 
+assert.ok(html.includes('href="/campus"'), 'Home tour links to MMMUT campus');
+const campus = await fetch(new URL('/campus', base));
+assert.equal(campus.status, 200);
+assert.ok((await campus.text()).includes('Madan Mohan Malaviya University of Technology, Gorakhpur'));
+for (const asset of ['mmmut-gate.glb', 'mmmut-crest.webp']) {
+  assert.equal((await fetch(new URL('/assets/campus/' + asset, base), { method: 'HEAD' })).status, 200);
+}
+checks.push('Playable campus route and branded gate assets');
+
 const festival = 'https://unstop.com/college-fests/continuum-madan-mohan-malaviya-university-of-technology-mmmut-gorakhpur-524153';
 assert.ok(html.includes(festival), 'Home footer links to the official festival');
 const destinations = { sponsors: 'Choose what you', about: 'Built by students at MMMUT', contact: 'Official event resources' };

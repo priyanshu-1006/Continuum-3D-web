@@ -275,7 +275,7 @@ export default function JourneyHome() {
               setPlaying(true);
             }}>{playing ? 'Pause tour' : 'Play tour'}</button>
             <button type="button" className="tour-step" aria-label="Next stop" onClick={() => goTo(active + 1)}>→</button>
-            <Link className="tour-explore" href="/explore" prefetch={false} onClick={stopTour}>Explore freely <span aria-hidden="true">↗</span></Link>
+            <Link className="tour-explore" href="/campus" prefetch={false} onClick={stopTour}>Explore campus <span aria-hidden="true">↗</span></Link>
           </div>
           <span className="visually-hidden" role="status">{preparingTour ? 'Preparing the castle tour' : playing ? 'Tour playing' : ''}</span>
         </div>

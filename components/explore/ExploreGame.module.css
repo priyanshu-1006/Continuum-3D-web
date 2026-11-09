@@ -38,7 +38,7 @@
   background: var(--panel);
   border: 1px solid rgba(225, 195, 125, .65);
   box-shadow: 0 4px 16px #2b1d154d;
-  border-radius: 8px;
+  border-radius: 16px;
 }
 .topbar h1 {
   margin: 0;
@@ -69,9 +69,6 @@
   font-size: 11px;
   font-weight: 700;
 }
-.relicPips { display: flex; gap: 6px; }
-.relicPips span { width: 8px; height: 8px; border: 1px solid #b4a177; background: #645e4b; transform: rotate(45deg); }
-.relicPips .filled { background: #f6d77b; border-color: #ffe5a4; box-shadow: 0 0 7px #ecca827a; }
 
 .utility {
   position: absolute;
@@ -81,10 +78,10 @@
   display: flex;
   gap: 6px;
 }
-.utility button, .actions button, .pad button, .clueTitle button, .menuButtons button, .menuButtons a {
+.utility button, .actions button, .clueTitle button, .menuButtons button, .menuButtons a {
   min-height: 36px;
   border: 1px solid rgba(225, 195, 125, .68);
-  border-radius: 7px;
+  border-radius: 999px;
   color: var(--ink);
   background: var(--panel);
   padding: 6px 11px;
@@ -96,7 +93,7 @@
 }
 .game :is(.back, button, .menuButtons a):hover { filter: brightness(1.14); }
 .game button:active { transform: translateY(1px); }
-.utility button[aria-expanded='true'], .actions button[aria-pressed='true'] { background: #674631; color: #fff8df; }
+.utility button[aria-expanded='true'], .utility button[aria-pressed='true'], .actions button[aria-pressed='true'] { background: #674631; color: #fff8df; }
 
 .welcome {
   position: absolute;
@@ -105,7 +102,7 @@
   display: grid;
   place-items: center;
   padding: 96px 18px 24px;
-  background: radial-gradient(ellipse at center, #20170fa3 0%, #2a211963 50%, #241c1415 100%);
+  background: radial-gradient(ellipse at center, #24190c7d 0%, #2a21192b 53%, #241c1405 100%);
   pointer-events: none;
 }
 .card {
@@ -115,9 +112,9 @@
   padding: clamp(20px, 5vw, 42px);
   text-align: center;
   border: 1px solid #d4b475;
-  border-radius: 14px;
+  border-radius: 24px;
   background: linear-gradient(155deg, #fffaed, #f0ddbe);
-  box-shadow: 0 0 0 4px #543924ad, 0 24px 90px #281a1488;
+  box-shadow: 0 0 0 4px #fff1d566, 0 24px 90px #281a1470;
   pointer-events: auto;
 }
 .crest { color: #a4692e; font-size: 28px; line-height: 1; text-shadow: 0 0 17px #e7c26c78; }
@@ -126,11 +123,17 @@
 .card h2 { margin: 0 0 12px; font-size: clamp(27px, 5vw, 46px); line-height: 1.03; font-weight: 650; }
 .card p:not(.eyebrow) { margin: 0 0 17px; color: #533f2e; font-size: 14px; line-height: 1.55; }
 .card p.hint { margin: 13px 0 0; color: #614b38; font-size: 11px; }
+.game[data-play-state='ready'] .welcome {
+  place-items: end start;
+  padding: 80px clamp(18px, 5vw, 72px) clamp(22px, 7vh, 76px);
+  background: linear-gradient(0deg, #2e211a61, transparent 63%);
+}
+.game[data-play-state='ready'] .card { max-width: min(390px, 100%); }
 .primary, .menuButtons .primary {
   min-height: 44px;
   padding: 9px 17px;
   border: 1px solid #f1d397;
-  border-radius: 7px;
+  border-radius: 999px;
   background: #edce85;
   color: #3d2a1b;
   font: inherit;
@@ -164,6 +167,10 @@
 .cluePanel li + li { border-top: 1px solid #d6b56e36; }
 .cluePanel li strong, .cluePanel li span { display: block; }
 .cluePanel li strong { color: #744e25; }
+.cluePanel p { margin: 10px 0 0; font-size: 12px; line-height: 1.45; }
+.clueNote { background: #e9d3a6; padding: 9px 11px; border-radius: 9px; }
+.sensitivity { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0 0 18px; font-size: 12px; }
+.sensitivity input { width: min(110px, 40%); accent-color: #865b2e; }
 
 .desktopKeys {
   position: absolute;
@@ -181,19 +188,64 @@
   pointer-events: none;
 }
 .desktopKeys kbd { padding: 2px 4px; border: 1px solid #93643978; border-radius: 3px; color: #5b361c; font-size: 10px; }
+.hotbar {
+  position: absolute;
+  bottom: max(58px, calc(env(safe-area-inset-bottom) + 43px));
+  left: 50%;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  transform: translateX(-50%);
+  border: 1px solid #ddc58a;
+  border-radius: 15px;
+  background: #382a22df;
+  box-shadow: 0 6px 20px #22150f66;
+}
+.hotbar span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #eddfba55;
+  border-radius: 8px;
+  background: #ffefc01c;
+  color: #f0dfba;
+  font-size: 12px;
+}
+.hotbar .acquired { color: var(--relic-color); border-color: var(--relic-color); background: #ffefc037; font-size: 19px; }
+.contextAction {
+  position: absolute;
+  z-index: 4;
+  top: 56%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 37px;
+  padding: 6px 13px;
+  border: 1px solid #e8c980;
+  border-radius: 999px;
+  background: #32251cf0;
+  color: #fff1cf;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.game .contextAction:active { transform: translate(-50%, 1px); }
+.contextAction kbd { border: 1px solid #eddfba75; border-radius: 4px; padding: 1px 4px; color: #ffe098; }
 .touchControls { display: none; }
 .notice {
   position: absolute;
   z-index: 8;
   left: 50%;
-  bottom: 73px;
+  bottom: max(110px, calc(env(safe-area-inset-bottom) + 95px));
   width: min(420px, calc(100% - 28px));
   text-align: center;
   transform: translateX(-50%);
   pointer-events: none;
 }
-.notice span, .stance { display: inline-block; padding: 8px 12px; border: 1px solid #e0b968; border-radius: 7px; color: var(--ink); background: var(--panel); font-size: 12px; }
-.stance { position: absolute; top: 83px; left: 16px; pointer-events: none; }
+.notice span { display: inline-block; padding: 8px 12px; border: 1px solid #e0b968; border-radius: 12px; color: var(--ink); background: var(--panel); font-size: 12px; }
 
 @media (max-width: 750px), (pointer: coarse) {
   .desktopKeys { display: none; }
@@ -209,31 +261,36 @@
     gap: 7px;
     pointer-events: none;
   }
-  .pad { display: grid; grid-template-columns: repeat(3, 43px); grid-template-rows: repeat(2, 43px); gap: 4px; touch-action: none; }
-  .pad button, .actions button { pointer-events: auto; touch-action: none; user-select: none; }
-  .pad button { min-height: 43px; padding: 0; font-size: 22px; }
-  .pad .forward { grid-area: 1 / 2; }
-  .pad .left { grid-area: 2 / 1; }
-  .pad .back { grid-area: 2 / 2; justify-self: stretch; }
-  .pad .right { grid-area: 2 / 3; }
-  .actions { display: grid; grid-template-columns: repeat(2, minmax(50px, auto)); gap: 5px; }
-  .actions button { min-height: 43px; padding: 6px 8px; }
-  .actions button:first-child { grid-column: 1 / -1; }
-  .notice { bottom: max(115px, calc(env(safe-area-inset-bottom) + 101px)); }
+  .stick {
+    display: grid;
+    place-items: center;
+    width: clamp(83px, 23vw, 112px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid #fff1ce95;
+    background: radial-gradient(circle, #342b2360 58%, #443326b0 61%);
+    box-shadow: 0 5px 14px #2a201b44;
+  }
+  .stick, .actions button { pointer-events: auto; touch-action: none; user-select: none; }
+  .stickKnob { display: grid; place-items: center; width: 41%; aspect-ratio: 1; border-radius: 50%; color: #5b3a22; background: #fff0cbde; box-shadow: 0 3px 8px #2a201b55; pointer-events: none; }
+  .actions { display: grid; grid-template-columns: repeat(2, minmax(54px, auto)); gap: 6px; }
+  .actions button { min-height: 45px; padding: 6px 10px; }
+  .actions button:first-child { font-size: 19px; }
+  .notice { bottom: max(157px, calc(env(safe-area-inset-bottom) + 143px)); }
+  .hotbar { bottom: max(110px, calc(env(safe-area-inset-bottom) + 98px)); }
+  .contextAction kbd { display: none; }
 }
 
 @media (max-width: 520px) {
+  .game[data-play-state='ready'] .welcome { place-items: end center; }
   .topbar { top: max(9px, env(safe-area-inset-top)); left: 9px; right: 9px; gap: 6px; }
   .topbar h1 { padding: 8px 6px; font-size: clamp(13px, 4.2vw, 18px); white-space: nowrap; }
   .back { padding: 7px 6px; font-size: 10px; white-space: nowrap; }
   .back span { margin-right: 1px; }
   .inventory { padding: 7px 6px; min-width: 58px; font-size: 9px; }
-  .relicPips { gap: 4px; }
-  .relicPips span { width: 6px; height: 6px; }
   .utility { top: max(54px, calc(env(safe-area-inset-top) + 45px)); right: 9px; gap: 4px; }
   .utility button { min-height: 38px; padding-inline: 8px; font-size: 11px; }
   .cluePanel { top: max(99px, calc(env(safe-area-inset-top) + 90px)); right: 9px; max-height: calc(100svh - 117px); }
-  .stance { top: 102px; left: 9px; }
 }
 
 @media (max-height: 470px) and (orientation: landscape) {

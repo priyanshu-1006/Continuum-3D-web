@@ -1,26 +1,44 @@
-import { Box3, BoxGeometry, BufferAttribute, BufferGeometry, DoubleSide, FrontSide, Line3, Matrix4, Mesh, Ray, Vector3, type Object3D } from 'three';
+import { Box3, BoxGeometry, BufferAttribute, BufferGeometry, DoubleSide, Euler, FrontSide, Line3, Matrix4, Mesh, Ray, Vector3, type Object3D } from 'three';
 import { CENTER, MeshBVH } from 'three-mesh-bvh';
-import { EXPLORE_BLOCKS, EXPLORE_SPAWN } from './explore-world';
+import { EXPLORE_BLOCKS, EXPLORE_SPAWN, PORTCULLIS, QUEST_PROP_COLLIDERS } from './explore-world';
+import type { WorldPoint } from './journey';
 
 export const STAND_HEIGHT = 1.19;
 export const CROUCH_HEIGHT = .76;
 const RADIUS = .24;
 const SKIN = .002;
 const DOWN = new Vector3(0, -1, 0);
+export type CollisionBlock = { position: WorldPoint; size: WorldPoint; rotation?: WorldPoint };
+type WorldLimits = { x: number; minZ: number; maxZ: number };
+const CASTLE_LIMITS = { x: 37, minZ: -43, maxZ: 39 };
 
-/** Merge world-space positions as floats so the quantized GLB's vertex format stays untouched. */
 export function createCastleCollision(castle: Object3D) {
+  const [x, y, z] = PORTCULLIS.position;
+  return createExploreCollision(
+    [...EXPLORE_BLOCKS, ...QUEST_PROP_COLLIDERS],
+    { position: [x, y + PORTCULLIS.size[1] / 2, z], size: PORTCULLIS.size },
+    CASTLE_LIMITS,
+    castle,
+  );
+}
+
+/** Merge world-space positions as floats so any quantized GLB stays untouched. */
+export function createExploreCollision(
+  blocks: readonly CollisionBlock[], gate: CollisionBlock, limits: WorldLimits, scene?: Object3D,
+) {
   const parts: { geometry: BufferGeometry; matrix: Matrix4 }[] = [];
-  castle.updateMatrixWorld(true);
-  castle.traverse(node => {
+  scene?.updateMatrixWorld(true);
+  scene?.traverse(node => {
     if (node instanceof Mesh && node.geometry.getAttribute('position')) {
       parts.push({ geometry: node.geometry, matrix: node.matrixWorld });
     }
   });
-  const procedural = EXPLORE_BLOCKS.map(block => ({
-    geometry: new BoxGeometry(...block.size),
-    matrix: new Matrix4().makeTranslation(...block.position),
-  }));
+  const procedural = blocks.map(block => {
+    const transform = new Matrix4();
+    if (block.rotation) transform.makeRotationFromEuler(new Euler(...block.rotation));
+    transform.setPosition(...block.position);
+    return { geometry: new BoxGeometry(...block.size), matrix: transform };
+  });
   parts.push(...procedural);
 
   const vertexCount = parts.reduce((sum, part) => sum + part.geometry.getAttribute('position').count, 0);
@@ -48,11 +66,14 @@ export function createCastleCollision(castle: Object3D) {
   const merged = new BufferGeometry();
   merged.setAttribute('position', new BufferAttribute(positions, 3));
   merged.setIndex(new BufferAttribute(indices, 1));
-  return new CastleCollision(merged);
+  return new CastleCollision(merged, gate, limits);
 }
 
 export class CastleCollision {
   private readonly bvh: MeshBVH;
+  private readonly gateGeometry: BoxGeometry;
+  private readonly gate: MeshBVH;
+  gateClosed = true;
   private readonly ray = new Ray();
   private readonly segment = new Line3();
   private readonly bounds = new Box3();
@@ -60,15 +81,24 @@ export class CastleCollision {
   private readonly capsulePoint = new Vector3();
   private readonly normal = new Vector3();
 
-  constructor(private readonly geometry: BufferGeometry) {
+  constructor(private readonly geometry: BufferGeometry, gate: CollisionBlock, private readonly limits: WorldLimits) {
     this.bvh = new MeshBVH(geometry, { strategy: CENTER, maxLeafTris: 12 });
+    this.gateGeometry = new BoxGeometry(...gate.size).translate(...gate.position);
+    this.gate = new MeshBVH(this.gateGeometry);
   }
 
-  dispose() { this.geometry.dispose(); }
+  dispose() { this.geometry.dispose(); this.gateGeometry.dispose(); }
+
+  outOfBounds(feet: Vector3) {
+    return feet.y < -7 || Math.abs(feet.x) > this.limits.x || feet.z < this.limits.minZ || feet.z > this.limits.maxZ;
+  }
 
   trace(origin: Vector3, direction: Vector3, distance: number, frontOnly = false, near = .004) {
     this.ray.set(origin, direction);
-    return this.bvh.raycastFirst(this.ray, frontOnly ? FrontSide : DoubleSide, near, distance) ?? null;
+    const side = frontOnly ? FrontSide : DoubleSide;
+    const terrain = this.bvh.raycastFirst(this.ray, side, near, distance);
+    const gate = this.gateClosed && this.gate.raycastFirst(this.ray, side, near, terrain?.distance ?? distance);
+    return gate || terrain || null;
   }
 
   floor(origin: Vector3, distance: number) {
@@ -84,10 +114,14 @@ export class CastleCollision {
 
   clear(feet: Vector3, height: number) {
     this.prepareCapsule(feet, height);
-    return !this.bvh.shapecast({
+    return !this.shapecast({
       intersectsBounds: box => box.intersectsBox(this.bounds),
       intersectsTriangle: triangle => triangle.closestPointToSegment(this.segment, this.trianglePoint, this.capsulePoint) < RADIUS - SKIN,
     });
+  }
+
+  private shapecast(callbacks: Parameters<MeshBVH['shapecast']>[0]) {
+    return this.bvh.shapecast(callbacks) || (this.gateClosed && this.gate.shapecast(callbacks));
   }
 
   /** Resolve contacts against the actual model and slide along the unblocked axis. */
@@ -96,7 +130,7 @@ export class CastleCollision {
     for (let pass = 0; pass < 3; pass++) {
       let corrected = false;
       this.prepareCapsule(feet, height);
-      this.bvh.shapecast({
+      this.shapecast({
         intersectsBounds: box => box.intersectsBox(this.bounds),
         intersectsTriangle: triangle => {
           const distance = triangle.closestPointToSegment(this.segment, this.trianglePoint, this.capsulePoint);
@@ -134,14 +168,21 @@ export type Explorer = {
   grounded: boolean;
   crouched: boolean;
   vault: Vault | null;
+  jumpBuffer: number;
+  groundGrace: number;
 };
 
-export function newExplorer(): Explorer {
-  return { feet: new Vector3(...EXPLORE_SPAWN), velocity: new Vector3(), yaw: 0, grounded: false, crouched: false, vault: null };
+export function newExplorer(position: WorldPoint = EXPLORE_SPAWN, yaw = 0): Explorer {
+  return {
+    feet: new Vector3(...position), velocity: new Vector3(), yaw, grounded: false,
+    crouched: false, vault: null, jumpBuffer: 0, groundGrace: 0,
+  };
 }
 
 const smooth = (value: number) => value * value * (3 - 2 * value);
 const VAULT_SECONDS = .44;
+const JUMP_BUFFER = .13;
+const GROUND_GRACE = .10;
 const sample = new Vector3();
 const probe = new Vector3();
 const forward = new Vector3();
@@ -157,7 +198,8 @@ function vaultPose(vault: Vault, progress: number, result: Vector3) {
 
 function findVault(player: Explorer, world: CastleCollision) {
   forward.set(Math.sin(player.yaw), 0, Math.cos(player.yaw));
-  probe.copy(player.feet).add(new Vector3(0, .31, 0));
+  probe.copy(player.feet);
+  probe.y += .31;
   const ledge = world.trace(probe, forward, .96, false, .08);
   if (!ledge?.face || Math.abs(ledge.face.normal.y) > .35) return null;
 
@@ -186,16 +228,23 @@ function findVault(player: Explorer, world: CastleCollision) {
   return null;
 }
 
-export type ExploreMotion = { direction: Vector3; crouch: boolean; jump: boolean; vault: boolean };
+export function canVault(player: Explorer, world: CastleCollision) {
+  return player.grounded && !player.crouched && !player.vault && findVault(player, world) !== null;
+}
+
+export type ExploreMotion = { direction: Vector3; crouch: boolean; jump: boolean; vault: boolean; sprint?: boolean };
 export type ExploreFeedback = 'vaulted' | 'vault-blocked' | 'jump-blocked' | 'returned';
 
-export function advanceExplorer(player: Explorer, world: CastleCollision, motion: ExploreMotion, elapsed: number): ExploreFeedback | null {
+export function advanceExplorer(
+  player: Explorer, world: CastleCollision, motion: ExploreMotion, elapsed: number,
+  respawn: WorldPoint = EXPLORE_SPAWN, respawnYaw = 0,
+): ExploreFeedback | null {
   const dt = Math.min(elapsed, .055);
   if (player.vault) {
     player.vault.time += dt;
     const progress = Math.min(1, player.vault.time / VAULT_SECONDS);
     vaultPose(player.vault, progress, player.feet);
-    if (progress === 1) { player.vault = null; player.grounded = true; }
+    if (progress === 1) { player.vault = null; player.grounded = true; player.groundGrace = GROUND_GRACE; }
     return null;
   }
 
@@ -203,25 +252,34 @@ export function advanceExplorer(player: Explorer, world: CastleCollision, motion
   player.crouched = motion.crouch || (player.crouched && !world.clear(player.feet, STAND_HEIGHT));
   const height = player.crouched ? CROUCH_HEIGHT : STAND_HEIGHT;
   let feedback: ExploreFeedback | null = null;
+  if (motion.jump) player.jumpBuffer = JUMP_BUFFER;
+  if (player.crouched && player.jumpBuffer > 0) {
+    player.jumpBuffer = 0;
+    feedback = 'jump-blocked';
+  }
   if (motion.vault) {
     const vault = player.grounded && !player.crouched ? findVault(player, world) : null;
     if (vault) {
       player.vault = vault;
       player.grounded = false;
+      player.jumpBuffer = 0;
+      player.groundGrace = 0;
       player.velocity.set(0, 0, 0);
       return 'vaulted';
     }
     feedback = 'vault-blocked';
   }
-  if (motion.jump && player.grounded) {
-    if (player.crouched) feedback = 'jump-blocked';
-    else { player.velocity.y = 4.65; player.grounded = false; }
-  }
-
   const steps = Math.max(1, Math.ceil(dt / .012));
   const step = dt / steps;
-  const speed = player.crouched ? 1.44 : 3.4;
+  const speed = player.crouched ? 1.44 : motion.sprint ? 4.55 : 3.4;
   for (let index = 0; index < steps; index++) {
+    if (player.jumpBuffer > 0 && (player.grounded || player.groundGrace > 0)) {
+      player.velocity.y = 4.65;
+      player.grounded = false;
+      player.jumpBuffer = 0;
+      player.groundGrace = 0;
+    }
+    player.jumpBuffer = Math.max(0, player.jumpBuffer - step);
     const damping = 1 - Math.exp(-step * (player.grounded ? 21 : 10));
     player.velocity.x += (motion.direction.x * speed - player.velocity.x) * damping;
     player.velocity.z += (motion.direction.z * speed - player.velocity.z) * damping;
@@ -243,10 +301,11 @@ export function advanceExplorer(player: Explorer, world: CastleCollision, motion
         player.grounded = true;
       }
     }
+    player.groundGrace = player.grounded ? GROUND_GRACE : Math.max(0, player.groundGrace - step);
   }
 
-  if (player.feet.y < -7 || Math.abs(player.feet.x) > 37 || player.feet.z < -43 || player.feet.z > 39) {
-    Object.assign(player, newExplorer());
+  if (world.outOfBounds(player.feet)) {
+    Object.assign(player, newExplorer(respawn, respawnYaw));
     return 'returned';
   }
   return feedback;

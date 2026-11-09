@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styles from './NexsusDirectory.module.css';
-import { facultyAdvisors, facultyCoordinators, leadership, peopleSources } from '@/lib/nexsus-people';
+import { chiefPatron, cseHead, facultyAdvisors, facultyCoordinators, leadership, peopleSources } from '@/lib/nexsus-people';
 
 const branchName = {
   CSE: 'Computer Science & Engineering',
@@ -73,14 +73,14 @@ export function FacultyDirectory() {
     <div className={styles.directory}>
       <div className={styles.university}>
         <section className={styles.office} aria-labelledby="patron-heading">
-          <h2 className={styles.eyebrow} id="patron-heading">Patron</h2>
-          <p className={styles.officeName}>Festival patron to be announced</p>
-          <p>Prof. Anupama Kaushik Sharma is the Vice-Chancellor of MMMUT.</p>
+          <h2 className={styles.eyebrow} id="patron-heading">{chiefPatron.role}</h2>
+          <p className={styles.officeName}>{chiefPatron.name}</p>
+          <p>{chiefPatron.appointment}</p>
         </section>
         <section className={styles.office} aria-labelledby="hod-heading">
           <h2 className={styles.eyebrow} id="hod-heading">Head of Department</h2>
-          <p className={styles.officeName}>Prof. Rakesh Kumar</p>
-          <p>Professor and Head of Computer Science &amp; Engineering, MMMUT</p>
+          <p className={styles.officeName}>{cseHead.name}</p>
+          <p>{cseHead.appointment}</p>
         </section>
       </div>
       <p className={styles.source}><a href={peopleSources.administration} target="_blank" rel="noreferrer">MMMUT administration ↗</a></p>

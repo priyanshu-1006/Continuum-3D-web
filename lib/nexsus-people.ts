@@ -6,6 +6,27 @@ export const peopleSources = {
   administration: 'https://www.mmmut.ac.in/Administration',
 } as const;
 
+export const chiefPatron: { name: string; role: string; appointment: string; portrait?: string } = {
+  name: 'Prof. Anupama Kaushik Sharma',
+  role: 'Chief Patron',
+  appointment: 'Vice-Chancellor, MMMUT',
+  portrait: 'vice-chancellor',
+};
+
+export const cseHead = {
+  name: 'Prof. Rakesh Kumar',
+  appointment: 'Professor and Head of Computer Science & Engineering, MMMUT',
+} as const;
+
+export const developerCredits = [
+  { name: 'Priyanshu Chaurasia', role: 'Lead developer', cohort: 'CSE ’28' },
+  { name: 'Ayush Singh', role: 'Finishing and polish', cohort: 'CSE ’29' },
+  { name: 'Amitesh Vishwakarma', role: 'Developer', cohort: 'CSE ’28' },
+  { name: 'Nitin Deep', role: 'Developer', cohort: 'CSE ’29' },
+  { name: 'Aryan Raj', role: 'Developer', cohort: 'CSE ’29' },
+  { name: 'Abhishek Sharma', role: 'Developer', cohort: 'CSE ’29' },
+] as const;
+
 type TeamMember = {
   name: string;
   role: string;
