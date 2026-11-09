@@ -7,7 +7,9 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, 
 import { CAMPUS_CHECKPOINTS, CAMPUS_DISCOVERIES, CAMPUS_LANDMARKS, type CampusDiscoveryId } from '@/lib/campus-world';
 import { CAMPUS_SAVE_KEY, campusStamps, newCampusProgress, readCampusProgress, type CampusProgress } from '@/lib/campus-progress';
 import { events, getEvent, type Event, type EventId } from '@/lib/events';
-import { chiefPatron, cseHead, developerCredits, facultyAdvisors, facultyCoordinators, peopleSources } from '@/lib/nexsus-people';
+import { chiefPatron, cseHead, facultyAdvisors, facultyCoordinators, peopleSources } from '@/lib/nexsus-people';
+import { DEVELOPER_STATIONS } from '@/lib/developer-office';
+import type { CampusVehicleMode } from '@/lib/campus-vehicles';
 import { clearExploreInput, GAME_KEYS, newExploreInput } from '../explore/controls';
 import styles from './CampusGame.module.css';
 
@@ -59,6 +61,7 @@ type Panel =
   | { kind: 'book'; page: BookPage }
   | { kind: 'stop'; id: CampusDiscoveryId; back?: BookPage; preview?: boolean }
   | { kind: 'event'; id: EventId; back: BookPage }
+  | { kind: 'developer'; name: string }
   | { kind: 'pause' };
 type Discovery = (typeof CAMPUS_DISCOVERIES)[number];
 
@@ -75,6 +78,7 @@ export default function CampusGame() {
   const [touchCrouch, setTouchCrouch] = useState(false);
   const [sensitivity, setSensitivity] = useState(1);
   const [attempt, setAttempt] = useState(0);
+  const [vehicle, setVehicle] = useState<CampusVehicleMode>('walking');
   const progressRef = useRef(progress);
   const inputRef = useRef(newExploreInput());
   const viewRef = useRef<HTMLDivElement>(null);
@@ -111,8 +115,13 @@ export default function CampusGame() {
   }, []);
 
   const ready = useCallback(() => setPhase(current => current === 'loading' ? 'ready' : current), []);
-  const fail = useCallback(() => { clearInput(); setPhase('error'); }, [clearInput]);
+  const fail = useCallback(() => { clearInput(); setVehicle('walking'); setPhase('error'); }, [clearInput]);
   const openPanel = useCallback((next: Panel) => { clearInput(); setPanel(next); }, [clearInput]);
+  const vehicleChanged = useCallback((mode: CampusVehicleMode) => {
+    clearInput();
+    setTouchCrouch(false);
+    setVehicle(mode);
+  }, [clearInput]);
 
   const checkpoint = useCallback((id: string) => {
     const previous = progressRef.current;
@@ -237,6 +246,18 @@ export default function CampusGame() {
     onClick: (event: MouseEvent<HTMLButtonElement>) => { if (!event.detail) run(); },
   });
 
+  const holdBrake = (event: PointerEvent<HTMLButtonElement>) => {
+    if (!playing || event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    inputRef.current.keys.add('Space');
+    inputRef.current.wake?.();
+  };
+  const releaseBrake = () => {
+    inputRef.current.keys.delete('Space');
+    inputRef.current.wake?.();
+  };
+
   const moveStick = (event: PointerEvent<HTMLDivElement>) => {
     if (!playing || stickPointer.current !== event.pointerId) return;
     const box = event.currentTarget.getBoundingClientRect();
@@ -283,15 +304,17 @@ export default function CampusGame() {
 
   const currentStop = panel?.kind === 'stop' ? CAMPUS_DISCOVERIES.find(stop => stop.id === panel.id) : undefined;
   const currentEvent = panel?.kind === 'event' ? getEvent(panel.id) : currentStop && !((panel?.kind === 'stop') && panel.preview) ? campusEvent(currentStop) : undefined;
+  const developer = panel?.kind === 'developer' ? DEVELOPER_STATIONS.find(station => station.name === panel.name) : undefined;
 
-  return <main className={styles.game} data-campus-state={phase}>
-    <div ref={viewRef} className={styles.view} tabIndex={0} aria-label="Playable campus. Use WASD to walk and drag to look."
+  return <main className={styles.game} data-campus-state={phase} data-campus-vehicle={vehicle}>
+    <div ref={viewRef} className={styles.view} tabIndex={0} aria-label={vehicle === 'car' ? 'Driving the Honda. Use WASD to drive and E to exit.' : 'Playable campus. Use WASD to walk and drag to look.'}
       onPointerDown={startLook} onPointerMove={moveLook} onPointerUp={endLook}
       onPointerCancel={endLook} onLostPointerCapture={endLook}>
       {phase !== 'error' && <CampusScene key={attempt} retry={attempt > 0}
         inputRef={inputRef} playing={playing} intro={phase === 'loading' || phase === 'ready'}
         progress={progress} sensitivity={sensitivity} onReady={ready} onError={fail}
         onInteract={interact} onCheckpoint={checkpoint} onActionLabel={setActionLabel} onFeedback={setNotice}
+        onDeveloper={name => openPanel({ kind: 'developer', name })} onVehicleChange={vehicleChanged}
       />}
     </div>
 
@@ -311,7 +334,7 @@ export default function CampusGame() {
         <span className={styles.kicker}><span aria-hidden="true">◆</span> CONTINUUM 2027</span>
         <h2>{phase === 'error' ? 'Campus view unavailable' : 'The campus awaits'}</h2>
         <p className={styles.university}>{UNIVERSITY}</p>
-        <p>{phase === 'error' ? 'You can still open your passport and browse festival information.' : 'Walk through the university gate. Find five event stamps and light the Festival Keep.'}</p>
+        <p>{phase === 'error' ? 'You can still open your passport and browse festival information.' : 'Walk, drive the Honda, or take the rickshaw to the university gate. Collect five stamps to light the Festival Keep.'}</p>
         {phase === 'loading' && <div className={styles.loading} role="status">Preparing the streets and campus grounds…</div>}
         {phase === 'ready' && <button type="button" className={styles.primary} onClick={() => { reposition(progressRef.current.checkpoint); setPhase('playing'); }}>
           {saved ? 'Continue exploring' : 'Enter campus'} <span aria-hidden="true">→</span>
@@ -322,22 +345,33 @@ export default function CampusGame() {
 
     {playing && <>
       <div className={styles.controls} aria-label="Keyboard controls">
-        <span><kbd>WASD</kbd> Move</span>
-        <span><kbd>Shift</kbd> Sprint</span>
-        <span><kbd>Space</kbd> Jump</span>
-        <span><kbd>C</kbd> Crouch</span>
-        <span><kbd>E</kbd> Interact</span>
+        {vehicle === 'walking' ? <>
+          <span><kbd>WASD</kbd> Move</span>
+          <span><kbd>Shift</kbd> Sprint</span>
+          <span><kbd>Space</kbd> Jump</span>
+          <span><kbd>C</kbd> Crouch</span>
+          <span><kbd>E</kbd> Interact</span>
+        </> : <>
+          {vehicle === 'car' && <>
+            <span><kbd>W</kbd>/<kbd>S</kbd> Forward / reverse</span>
+            <span><kbd>A</kbd>/<kbd>D</kbd> Steer</span>
+            <span><kbd>Space</kbd> Brake</span>
+          </>}
+          <span><kbd>E</kbd> Exit</span>
+        </>}
         <span>Drag to look</span>
       </div>
       <div className={styles.objective} aria-label="Current objective">
         <span aria-hidden="true">◆</span>
-        <div><strong>{!progress.gateOpen ? 'Campus arrival' : progress.beaconLit ? 'Keep illuminated' : 'Festival passport'}</strong>
-          <small>{!progress.gateOpen ? 'Follow the street to the university gate.' : progress.beaconLit ? 'Look for the hidden archive.' : stamps.size === events.length ? 'Find the beacon in the Festival Keep.' : 'Collect event stamps around campus.'}</small>
+        <div><strong>{vehicle === 'car' ? 'Honda Brio Amaze' : vehicle === 'rickshaw' ? 'Campus rickshaw' : !progress.gateOpen ? 'Campus arrival' : progress.beaconLit ? 'Keep illuminated' : 'Festival passport'}</strong>
+          <small>{vehicle === 'car' ? 'Drive along the campus streets.' : vehicle === 'rickshaw' ? 'Enjoy the view until your stop.' : !progress.gateOpen ? 'Follow the street to the university gate.' : progress.beaconLit ? 'Look for the hidden archive.' : stamps.size === events.length ? 'Find the beacon in the Festival Keep.' : 'Collect event stamps around campus.'}</small>
         </div>
       </div>
       {actionLabel && <button type="button" className={styles.context} onClick={() => action('vault')}><kbd>E</kbd>{actionLabel}</button>}
       <div className={styles.touchControls} aria-label="Touch controls">
-        <div className={styles.stick} role="group" aria-label="Movement thumbstick" onPointerDown={event => {
+        <div className={styles.stick} role="group" aria-hidden={vehicle === 'rickshaw' || undefined}
+          aria-label={vehicle === 'car' ? 'Throttle and steering thumbstick' : 'Movement thumbstick'} onPointerDown={event => {
+          if (vehicle === 'rickshaw') return;
           if (stickPointer.current !== null) return;
           event.preventDefault();
           stickPointer.current = event.pointerId;
@@ -348,17 +382,22 @@ export default function CampusGame() {
         </div>
         <div className={styles.actions}>
           <button type="button" {...tap(() => action('recenter'))} aria-label="Recenter camera">↻</button>
-          <button type="button" {...tap(() => action('jump'))}>Jump</button>
-          <button type="button" {...tap(toggleCrouch)} aria-pressed={touchCrouch}>Crouch</button>
-          <button type="button" {...tap(() => action('vault'))} disabled={!actionLabel}>Use</button>
+          {vehicle === 'walking' && <>
+            <button type="button" {...tap(() => action('jump'))}>Jump</button>
+            <button type="button" {...tap(toggleCrouch)} aria-pressed={touchCrouch}>Crouch</button>
+          </>}
+          {vehicle === 'car' && <button type="button" onPointerDown={holdBrake} onPointerUp={releaseBrake}
+            onPointerCancel={releaseBrake} onLostPointerCapture={releaseBrake}
+            onClick={event => { if (!event.detail) action('jump'); }}>Brake</button>}
+          <button type="button" {...tap(() => action('vault'))} disabled={!actionLabel}>{vehicle === 'walking' ? 'Use' : 'Exit'}</button>
         </div>
       </div>
     </>}
 
     <div className={styles.notice} role="status" aria-live="polite">{notice && <span>{notice}</span>}</div>
 
-    {panel && <CampusDialog title={panel.kind === 'pause' ? 'Take a breather' : currentEvent?.title ?? currentStop?.name ?? 'Campus Passport'}
-      kicker={panel.kind === 'pause' ? 'Exploration paused' : currentStop?.location ?? 'CONTINUUM 2027'}
+    {panel && <CampusDialog title={panel.kind === 'pause' ? 'Take a breather' : developer?.name ?? currentEvent?.title ?? currentStop?.name ?? 'Campus Passport'}
+      kicker={panel.kind === 'pause' ? 'Exploration paused' : developer ? 'Developers’ House' : currentStop?.location ?? 'CONTINUUM 2027'}
       close={() => setPanel(null)}
       back={(panel.kind === 'stop' || panel.kind === 'event') && panel.back
         ? () => setPanel({ kind: 'book', page: panel.back ?? 'stamps' })
@@ -378,6 +417,10 @@ export default function CampusGame() {
       {currentEvent && <EventDetails key={currentEvent.slug} event={currentEvent} stamped={stamps.has(currentEvent.slug)}
         collect={panel.kind === 'stop' && !panel.preview ? () => collectStamp(panel.id) : undefined} />}
       {currentStop && !currentEvent && <StopDetails stop={currentStop} preview={panel.kind === 'stop' && panel.preview === true} progress={progress} stampCount={stamps.size} />}
+      {developer && <div className={styles.patron}>
+        {developer.portrait && <Image src={'/continuum/people/' + developer.portrait + '.webp'} alt="" width={84} height={84} />}
+        <div><strong>{developer.role}</strong><p>{developer.cohort} · CONTINUUM 2027</p></div>
+      </div>}
       {panel.kind === 'pause' && <>
         <p className={styles.lede}>Your passport is saved on this device. Continue from here or return to the university gate.</p>
         <label className={styles.range}>Look sensitivity <input type="range" min=".55" max="1.65" step=".05" value={sensitivity} onChange={event => {
@@ -545,12 +588,6 @@ function StopDetails({ stop, preview, progress, stampCount }: {
     </div>}
     {stop.id === 'faculty' && <FacultyNotes />}
     {stop.id === 'dev-house' && <>
-      <div className={styles.callout}><strong>From the workbench</strong><p>The project grew from a scroll-through castle tour to a playable relic hunt and this walkable campus.</p></div>
-      <h3 className={styles.sectionTitle}>Developer credits</h3>
-      <ul className={styles.roster}>{developerCredits.map(member => <li key={member.name}>
-        <span className={styles.initials} aria-hidden="true">{member.name.split(' ').map(word => word[0]).join('')}</span>
-        <span><strong>{member.name}</strong><small>{member.role} · {member.cohort}</small></span>
-      </li>)}</ul>
       <Link href="/team" className={styles.textLink}>Meet the Nexsus team ↗</Link>
     </>}
     {stop.id === 'forest' && <div className={styles.links}><Link href={stop.link ?? '/explore'} prefetch={false} className={styles.primary}>Enter the original castle →</Link></div>}

@@ -724,8 +724,8 @@
     },
     {
       "path": "/assets/CREDITS.md",
-      "bytes": 7898,
-      "sha256": "8519e2a1bf54ba0d85a3c398866719122b8f447359de252c7f33cb811fc37052",
+      "bytes": 8582,
+      "sha256": "e916319be273a88f219c344ab412d033ad898f499d1fb31db89afbf06ec8628c",
       "source": "ASSET-CREDITS.md",
       "additions": "Website distribution, raster conversion, castle quest and campus asset notices"
     },
@@ -1064,6 +1064,24 @@
       "source": "https://www.mmmut.ac.in/images/Prof.AnupamaKaushikSharma.png",
       "license": "MMMUT official portrait",
       "modification": "Resized and encoded as WebP"
+    },
+    {
+      "path": "/assets/campus/car.glb",
+      "source": "https://sketchfab.com/3d-models/2013-honda-brio-amaze-922c636df4b34c539e6b8cefabc38cbb",
+      "author": "Raysh",
+      "bytes": 412460,
+      "sha256": "20d20e3020b5be2b8c275117191f2fa127372c263bdd0d4f0a5b7afefbf1bc9d",
+      "license": "CC-BY-4.0",
+      "modification": "Simplified geometry and Meshopt compressed GLB"
+    },
+    {
+      "path": "/assets/campus/rickshaw.glb",
+      "source": "https://sketchfab.com/3d-models/indian-auto-rickshaw-ahmedabad-gujarat-india-9075b08e08b149f099f601c3a239cfa1",
+      "author": "Doron Altaratz",
+      "bytes": 1245148,
+      "sha256": "2e0ceb20198a1073d9acba6670e62489e3fa8228352a83ab4afe785bee795e95",
+      "license": "CC-BY-4.0",
+      "modification": "Trimmed scan background, simplified geometry and Meshopt compressed GLB"
     }
   ]
 }

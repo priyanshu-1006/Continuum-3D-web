@@ -93,6 +93,10 @@ export class CastleCollision {
     return feet.y < -7 || Math.abs(feet.x) > this.limits.x || feet.z < this.limits.minZ || feet.z > this.limits.maxZ;
   }
 
+  overlapsBox(box: Box3, transform: Matrix4) {
+    return this.bvh.intersectsBox(box, transform) || (this.gateClosed && this.gate.intersectsBox(box, transform));
+  }
+
   trace(origin: Vector3, direction: Vector3, distance: number, frontOnly = false, near = .004) {
     this.ray.set(origin, direction);
     const side = frontOnly ? FrontSide : DoubleSide;

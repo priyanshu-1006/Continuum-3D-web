@@ -65,6 +65,11 @@ This asset notice applies to the named artwork and models; it does not assign th
 - The university crest and the portrait of the Vice-Chancellor come from MMMUT’s official site. Both images were resized and encoded as WebP. [University crest](https://www.mmmut.ac.in/images/largelogo.jpg) · [University portrait](https://www.mmmut.ac.in/images/Prof.AnupamaKaushikSharma.png)
 - Selected campus models from Kenney’s [Modular Buildings](https://kenney.nl/assets/modular-buildings), [Furniture Kit](https://kenney.nl/assets/furniture-kit), [Fantasy Town Kit](https://kenney.nl/assets/fantasy-town-kit), [Castle Kit](https://kenney.nl/assets/castle-kit), and [Blocky Characters](https://kenney.nl/assets/blocky-characters) are used under CC0. Companion textures were embedded in the GLB files.
 
+## Campus vehicles
+
+- The drivable car adapts [2013 Honda Brio Amaze by Raysh](https://sketchfab.com/3d-models/2013-honda-brio-amaze-922c636df4b34c539e6b8cefabc38cbb) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The GLB was simplified, compressed, and fitted to the campus.
+- The shuttle adapts [Indian Auto Rickshaw, Ahmedabad, Gujarat, India by Doron Altaratz](https://sketchfab.com/3d-models/indian-auto-rickshaw-ahmedabad-gujarat-india-9075b08e08b149f099f601c3a239cfa1) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The surrounding wall and pavement were trimmed from the scan. The GLB was simplified, compressed, and fitted to the campus.
+
 ## Locally bundled fonts
 
 - Fraunces — Copyright 2018 The Fraunces Project Authors. Source: https://github.com/google/fonts/tree/main/ofl/fraunces. Unmodified variable font, renamed to `fonts/fraunces.ttf` for its public URL. License: SIL Open Font License 1.1; full copyright and license notice in `fonts/fraunces-OFL.txt`.

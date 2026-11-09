@@ -347,13 +347,12 @@ export default function CampusScenery({ collected, playing = false, beaconLit = 
     {CAMPUS_DESKS.map((position, i) => <group key={i}>
       <SceneProp source={assets.desk} position={position} height={.76} width={1.15} depth={.55} />
       <SceneProp source={assets.chair} position={[position[0] + .76, 0, position[2] + .16]} height={.83} yaw={.45} />
-      {i === 0 || i === 4 || i > 4
+      {i === 0 || i >= 4
         ? <SceneProp source={assets.monitor} position={[position[0], .76, position[2] + .03]} height={.45} />
         : <SceneProp source={assets.books} position={[position[0], .76, position[2] + .03]} height={.15} />}
     </group>)}
     {CAMPUS_SHELVES.map(({ position, yaw }, i) => <SceneProp key={i} source={assets.shelf} position={position} height={1.6} width={1.12} depth={.42} yaw={yaw} />)}
-    {collected?.has('secret') && <Plaque title="FIRST BUILD" detail="Castle route blueprint" position={[-6.3, 1.76, 26.27]} width={1.92} height={.45} tint="#425a68" />}
-    <Box position={[-6.4, 1.11, 25.805]} size={[.108, .12, .08]} color="#e9be74" glow />
+    {collected?.has('secret') && <Plaque title="FIRST BUILD" detail="Castle route blueprint" position={[-6.35, 1.7, 28.865]} width={1.92} height={.45} tint="#425a68" />}
     <Plaque title="CSE FACULTY" detail="Coordinators & department" position={[-7.25, 1.8, 14.252]} width={2.34} height={.58} />
     <Plaque title="CHIEF PATRON" detail="Vice-Chancellor, MMMUT" position={[-10.75, 2.42, 14.255]} width={2.33} height={.46} tint="#735847" />
     <Box position={[-10.75, 1.65, 14.25]} size={[.96, .96, .075]} color="#ad8658" />

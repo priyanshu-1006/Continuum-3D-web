@@ -69,13 +69,13 @@ export const CAMPUS_DISCOVERIES: CampusDiscovery[] = [
     description: 'A loose page invites you to turn a few carefully chosen words into something unexpected. It points to the PromptX challenge.', eventId: 'promptx',
   },
   {
-    id: 'dev-house', name: 'Developers’ House', location: 'Builders’ Row', position: [-9.9, .96, 25.72], approach: [-9.9, .015, 24.62],
-    range: 1.12, accent: '#8cd9ff', hint: 'The house with the blue awning has a terminal near the back.',
-    description: 'Explore how the site was assembled, from the cast of voxel props to the routes and puzzle logic. The Nexsus directory introduces the festival team.', link: '/team',
+    id: 'dev-house', name: 'Developers’ House', location: 'Builders’ Row', position: [-9, 1.12, 20.03], approach: [-9, .015, 20.44],
+    range: .7, accent: '#8cd9ff', hint: 'Enter the house with the blue awning and walk up to each named desk.',
+    description: 'Walk the workshop to meet each developer at their own desk. The lead cabin is through the glass partition.', link: '/team',
   },
   {
-    id: 'secret', name: 'First Build Archive', location: 'Developers’ House', position: [-6.4, 1.12, 25.6], approach: [-6.4, .015, 24.65],
-    range: 1.04, accent: '#ffcb8c', hint: 'Search for a small brass latch near the workshop’s bookshelves.',
+    id: 'secret', name: 'First Build Archive', location: 'Developers’ House', position: [-6.35, 1.12, 28.24], approach: [-6.55, .015, 27.05],
+    range: 1.04, accent: '#ffcb8c', hint: 'Look for a small brass latch on the cabinet inside the lead cabin.',
     description: 'A tucked-away blueprint shows the first castle route. The forest trail still leads to the original relic hunt.',
   },
   {
@@ -115,7 +115,7 @@ export const CAMPUS_ROOMS: CampusRoom[] = [
   { id: 'cse', name: 'CSE BLOCK', subtitle: 'Computer Science & Engineering', x: 9, z: 11, width: 8.4, depth: 7.1, wall: '#eee1c5', accent: '#3b9396', roof: '#397c82' },
   { id: 'admin', name: 'ADMINISTRATION', subtitle: 'Welcome Hall · Faculty Office', x: -9, z: 11, width: 8.4, depth: 7.1, wall: '#ead7ad', accent: '#b76b4a', roof: '#9b5445' },
   { id: 'library', name: 'CAMPUS LIBRARY', subtitle: 'Reading Room & Archive', x: 9, z: 23, width: 8.4, depth: 7.1, wall: '#e6dbc8', accent: '#8266a1', roof: '#69567c' },
-  { id: 'dev', name: 'DEVELOPERS’ HOUSE', subtitle: 'The workshop behind the world', x: -9, z: 23, width: 8.4, depth: 7.1, wall: '#dfc4a0', accent: '#4f81a7', roof: '#45637c' },
+  { id: 'dev', name: 'DEVELOPERS’ HOUSE', subtitle: 'The workshop behind the world', x: -9, z: 24.25, width: 10.8, depth: 9.6, wall: '#dfc4a0', accent: '#4f81a7', roof: '#45637c' },
   { id: 'makers', name: 'MAKERS’ LAB', subtitle: 'Build · Test · Tinker', x: 9, z: 33.5, width: 8.4, depth: 7.1, wall: '#e8d7b7', accent: '#b46849', roof: '#895f56' },
 ];
 
@@ -123,7 +123,7 @@ export const CAMPUS_PALMS: { position: WorldPoint; scale: number }[] = [
   { position: [-4.55, 0, 3.1], scale: 1.16 }, { position: [4.55, 0, 3.1], scale: 1.14 },
   { position: [-4.65, 0, 8.55], scale: 1.02 }, { position: [4.65, 0, 8.55], scale: 1.05 },
   { position: [-4.5, 0, 14.62], scale: 1 }, { position: [4.5, 0, 14.62], scale: 1 },
-  { position: [-4.86, 0, 22.72], scale: .9 }, { position: [4.86, 0, 22.72], scale: .95 },
+  { position: [-15.1, 0, 23.5], scale: .9 }, { position: [4.86, 0, 22.72], scale: .95 },
   { position: [-4.8, 0, 30.2], scale: .9 }, { position: [4.75, 0, 30.2], scale: 1.08 },
   { position: [-14, 0, 6.45], scale: 1.02 }, { position: [14, 0, 6.45], scale: 1.1 },
 ];
@@ -141,13 +141,11 @@ export const CAMPUS_STREET_HOUSES: {
 
 export const CAMPUS_DESKS: WorldPoint[] = [
   [9, 0, 13.65], [-10.75, 0, 13.65], [-7.25, 0, 13.65], [9, 0, 25.65],
-  [-9.9, 0, 25.65], [7.15, 0, 36.05], [10.85, 0, 36.05],
-  [6.35, 0, 11.48], [11.65, 0, 11.48], [-11.8, 0, 22.25],
+  [7.15, 0, 36.05], [10.85, 0, 36.05], [6.35, 0, 11.48], [11.65, 0, 11.48],
 ];
 export const CAMPUS_SHELVES: { position: WorldPoint; yaw: number }[] = [
   { position: [6.02, 0, 23.25], yaw: Math.PI / 2 },
   { position: [11.98, 0, 23.25], yaw: -Math.PI / 2 },
-  { position: [-6.28, 0, 26.08], yaw: Math.PI },
 ];
 
 const block = (position: WorldPoint, size: WorldPoint, color: string, solid = false): CampusBlock => ({ position, size, color, solid });
@@ -210,6 +208,8 @@ export const CAMPUS_FOUNTAIN = FOUNTAIN_CENTER;
 export const CAMPUS_BLOCKS: CampusBlock[] = [
   block([0, -.48, 17], [58, .96, 88], '#8fa363', true),
   block([0, .006, -9.85], [5.6, .012, 23.6], '#777a74'),
+  block([0, .007, -19.2], [34, .014, 4.8], '#777a74'),
+  ...Array.from({ length: 14 }, (_, i) => block([(i - 6.5) * 2.38, .016, -19.2], [1.06, .009, .08], '#e4d5af')),
   block([0, .009, 18.5], [5.8, .012, 37], '#d5c3a6'),
   block([0, .011, 7.98], [11.8, .012, 5.75], '#ded0b6'),
   block([0, .011, 13.4], [11.8, .012, 5.75], '#ded0b6'),
