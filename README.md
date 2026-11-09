@@ -1,6 +1,6 @@
 # CONTINUUM 2027
 
-A responsive event website built with the Next.js 16 App Router, React, TypeScript, React Three Fiber, Three.js, and GSAP. The opening frames an illustrated castle beneath the stone-and-gold CONTINUUM 2027 title. Scrolling brings the camera down behind an original voxel guide, then moves the guide through both castle gates to five noticeboards. The minimap tracks the guide and links to each stop.
+A responsive event website built with the Next.js 16 App Router, React, TypeScript, React Three Fiber, and Three.js. The opening frames an illustrated castle beneath the stone-and-gold CONTINUUM 2027 title. Scrolling brings the camera down behind an original voxel guide, then moves the guide through both castle gates to five noticeboards. The minimap tracks the guide and links to each stop.
 
 ## Run locally
 
@@ -58,7 +58,9 @@ The dialog, tab navigation, and world settings live in `components/EventModal.ts
 
 Registration buttons open the event's Unstop page. Neural Nexsus and Battleforge display a pending state until their confirmed registration links are available. Update event content and destinations in `lib/events.ts`.
 
-Scroll or use the page navigation keys to follow the guide. At a stop, click the artwork, press E, or choose Open poster. The map is open on desktop and expands from the Castle map button on mobile. The route and stops are configured in `lib/journey.ts`.
+Scroll, use Previous and Next, or choose Play tour to follow the guide automatically. Wheel, touch scroll, and page navigation keys pause playback. At a stop, click the artwork, press E, or choose Open poster. The map is open on desktop and expands from the Castle map button on mobile. The route and stops are configured in `lib/journey.ts`.
+
+**Explore freely** opens the separate Castle Relic Hunt at `/explore`. Move with WASD or the arrow keys, drag to look, use Space to jump, C to crouch, and E to vault. Touch devices get movement and action buttons. Find five relics around the gate, village road, and courtyard. The game tests movement against the same castle geometry as the guided tour.
 
 Keep the credits and asset notices with any distributed copy. Publication and hosting are separate from this local implementation.
 

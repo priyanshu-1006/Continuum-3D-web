@@ -15,6 +15,7 @@ export type JourneyProgress = {
 export type ScreenStation = {
   slug: string;
   position: WorldPoint;
+  cameraPosition: WorldPoint;
   rotation: number;
   accent: string;
   poster: string;
@@ -46,17 +47,23 @@ for (let index = 1; index < WALK_ROUTE.length; index++) {
   distances.push(distances[index - 1] + Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]));
 }
 export const ROUTE_LENGTH = distances[distances.length - 1];
-export const JOURNEY_STOPS = [0, distances[2], distances[3] + 1, distances[4], distances[7], ROUTE_LENGTH, ROUTE_LENGTH].map(distance => distance / ROUTE_LENGTH);
+export const JOURNEY_STOPS = [0, distances[2], distances[3] + 1, distances[4], distances[9], ROUTE_LENGTH, ROUTE_LENGTH].map(distance => distance / ROUTE_LENGTH);
 export const STOP_FRACTIONS = JOURNEY_STOPS;
 
-const STATIONS = [
-  { slug: "neural-nexsus", position: [2.05, 1.65, -14.6] as WorldPoint, rotation: Math.PI, accent: "#84e7b9", groundY: -2.5, width: 2.6 },
-  { slug: "promptx", position: [2.05, 1.65, -11.6] as WorldPoint, rotation: Math.PI, accent: "#bd9bff", groundY: -2.5, width: 2.6 },
-  { slug: "nexathon", position: [2.05, 2.4, -7] as WorldPoint, rotation: Math.PI, accent: "#6fdde9", groundY: -2.5, width: 2.6 },
-  { slug: "redstone-rush", position: [-0.8, 1.88, 0.25] as WorldPoint, rotation: Math.PI, accent: "#f27963", groundY: 0, width: 2.6 },
-  { slug: "battleforge", position: [4.25, 1.65, 0.25] as WorldPoint, rotation: -Math.PI / 2, accent: "#e8c176", groundY: 0, width: 2 },
+// Place panels on alternating sides of the bridge and turn the last view
+// across the courtyard. Camera anchors and panel faces clear the source mesh.
+const STATIONS: Omit<ScreenStation, "rotation" | "poster">[] = [
+  { slug: "neural-nexsus", position: [1.75, 2.15, -14.2], cameraPosition: [0, 1.85, -18.4], accent: "#84e7b9", groundY: -2.5, width: 2.45 },
+  { slug: "promptx", position: [-1.8, 2, -10.8], cameraPosition: [0, 2.65, -14.5], accent: "#bd9bff", groundY: -2.5, width: 2.45 },
+  { slug: "nexathon", position: [1.75, 2.6, -8.1], cameraPosition: [0, 3.25, -11.6], accent: "#6fdde9", groundY: -2.5, width: 2.45 },
+  { slug: "redstone-rush", position: [-0.8, 2.15, 0.45], cameraPosition: [0, 1.776, -3.5], accent: "#f27963", groundY: 0, width: 2.45 },
+  { slug: "battleforge", position: [4.55, 2.15, -0.1], cameraPosition: [1.45, 2.7, -0.6], accent: "#e8c176", groundY: 0, width: 2.1 },
 ];
-export const SCREEN_STATIONS: ScreenStation[] = STATIONS.map(station => ({ ...station, poster: "/assets/posters/" + station.slug + ".webp" }));
+export const SCREEN_STATIONS: ScreenStation[] = STATIONS.map(station => ({
+  ...station,
+  rotation: Math.atan2(station.cameraPosition[0] - station.position[0], station.cameraPosition[2] - station.position[2]),
+  poster: `/assets/posters/${station.slug}.webp`,
+}));
 
 /** Thin, reversible additions bridge three measured quarter-block deck notches. */
 export const BRIDGE_PATCHES: WorldPoint[] = [[0, -0.025, -20.375], [0, -0.025, -19.125], [0, -0.025, -4.375]];

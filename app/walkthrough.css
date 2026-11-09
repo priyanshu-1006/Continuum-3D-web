@@ -103,7 +103,7 @@
   font-size: 12px;
   font-weight: 750;
 }
-.castle-hero { height: 142svh; }
+.castle-hero { height: 122svh; }
 .hero-frame { position: sticky; top: 0; height: 100svh; opacity: var(--hero-fade); }
 .hero-title {
   position: absolute;
@@ -131,10 +131,10 @@
 }
 .explore-cue span { display: grid; place-items: center; width: 31px; height: 31px; border: 1px solid #fff9dfb8; border-radius: 50%; font-size: 17px; line-height: 1; animation: cue-bob 2.5s ease-in-out infinite; }
 @keyframes cue-bob { 50% { transform: translateY(4px); } }
-.poster-stop { height: 152svh; position: relative; }
+.poster-stop { height: 84svh; position: relative; }
 .static-poster { display: block; position: sticky; top: 18svh; width: min(73vw, 950px); margin-inline: auto; pointer-events: auto; }
 .static-poster img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 18px 50px #392e2640; }
-.journey:is(.world-ready, .world-loading) .static-poster { display: none; }
+.journey.world-ready .static-poster { display: none; }
 .poster-interact {
   position: fixed;
   z-index: 14;
@@ -165,6 +165,96 @@
 .world-unavailable .hero-frame { position: relative; height: 100svh; opacity: 1; }
 .world-unavailable .poster-stop { height: auto; padding: 17px 0; background: var(--paper); }
 .world-unavailable .static-poster { position: relative; top: auto; width: min(86%, 900px); }
+
+.tour-controls {
+  position: fixed;
+  z-index: 28;
+  left: max(20px, env(safe-area-inset-left));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid #f4dfb5;
+  border-radius: 15px;
+  background: #f9eddaee;
+  color: #3f2b1e;
+  box-shadow: 0 5px 22px #31210c4d, inset 0 1px #fff9ee;
+}
+.journey[data-active-stage="0"] .tour-controls { bottom: max(76px, calc(env(safe-area-inset-bottom) + 55px)); }
+.tour-location {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding-inline: 4px;
+  font-size: 12px;
+  font-weight: 750;
+}
+.tour-location span {
+  color: #765327;
+  font-size: 9px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.tour-actions { display: flex; align-items: stretch; gap: 4px; }
+.tour-actions :is(button, a) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  border: 1px solid #cba66e;
+  border-radius: 999px;
+  padding: 0 9px;
+  color: #4d321b;
+  background: #fff9ee;
+  font-size: 11px;
+  font-weight: 780;
+  white-space: nowrap;
+}
+.tour-actions :is(button, a):hover { background: #f3d7a0; }
+.tour-actions .tour-step { width: 37px; padding: 0; font-size: 16px; }
+.tour-actions .tour-step:disabled { opacity: .46; cursor: default; background: #fff9ee; }
+.tour-actions .tour-play { min-width: 77px; }
+.tour-actions .tour-explore {
+  gap: 5px;
+  background: #675039;
+  color: #fff5df;
+}
+.tour-actions .tour-explore:hover { background: #4b3828; }
+.gallery-explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 11px 16px;
+  border: 1px solid #f5d4a0;
+  border-radius: 999px;
+  background: #2e2018e6;
+  color: #fff5df;
+  font-weight: 750;
+  pointer-events: auto;
+}
+.gallery-explore:hover { background: #483425; }
+.journey.world-ready .poster-gallery {
+  transition: opacity .24s ease, visibility .24s;
+}
+.journey.world-ready:not([data-active-stage="6"]) .poster-gallery {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 820px) {
+  .tour-controls { bottom: max(67px, calc(env(safe-area-inset-bottom) + 55px)); left: 12px; }
+  .journey[data-active-stage="0"] .tour-controls { bottom: max(64px, calc(env(safe-area-inset-bottom) + 50px)); }
+  .journey .explore-cue { bottom: max(146px, 19svh); }
+  .tour-actions :is(button, a) { min-height: 44px; }
+}
+
+@media (max-width: 380px) {
+  .tour-controls { padding: 6px; gap: 4px; }
+  .tour-actions .tour-step { width: 33px; }
+  .tour-actions :is(button, a) { padding-inline: 7px; }
+}
 .castle-map {
   position: fixed;
   right: max(22px, env(safe-area-inset-right));

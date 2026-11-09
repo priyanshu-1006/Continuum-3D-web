@@ -10,6 +10,7 @@ import { BRIDGE_PATCHES, HERO_SCENERY_END, JOURNEY_STOPS, ROUTE_LENGTH, SCREEN_S
 
 type CastleWorldProps = {
   progressRef: RefObject<JourneyProgress>;
+  progressSignal?: EventTarget;
   quality: "high" | "low";
   paused: boolean;
   onReady: () => void;
@@ -236,6 +237,7 @@ function BannerFrames() {
       [-1, 1].forEach(side => {
         put([0, side * (height / 2 + 0.095), 0.015], [width + 0.3, 0.18, 0.23], "#776147");
         put([side * (width / 2 + 0.1), 0, 0.015], [0.15, height, 0.21], "#66543e");
+        put([side * (width / 2 - 0.13), height / 2 + 0.38, 0.065], [0.19, 0.06, 0.17], "#493a2b");
         const poleHeight = station.position[1] - station.groundY;
         put([side * (width / 2 + 0.09), -poleHeight / 2, -0.08], [0.14, poleHeight, 0.16], "#574832");
         put([side * (width / 2 + 0.09), -poleHeight + 0.08, -0.08], [0.28, 0.16, 0.3], "#78745a");
@@ -274,6 +276,10 @@ function EventBanner({ station, chapter, activeBannerRef, texture, onSelectEvent
       <boxGeometry args={[0.36, 0.055, 0.08]} />
       <meshBasicMaterial color={station.accent} toneMapped={false} />
     </mesh>
+    {[-1, 1].map(side => <mesh key={side} position={[side * (station.width / 2 - 0.13), station.width * 9 / 32 + 0.27, 0.065]}>
+      <boxGeometry args={[0.13, 0.17, 0.13]} />
+      <meshBasicMaterial color="#ffe4a6" toneMapped={false} />
+    </mesh>)}
   </group>;
 }
 
@@ -282,18 +288,35 @@ function LoadedWorld({ quality, progressRef, baseClip, activeBannerRef, onReady,
   const nature = useLoader(GLTFLoader, NATURE_NAMES.map(name => "/assets/models/nature/" + name + ".glb"), configureGLTF);
   const posters = useLoader(TextureLoader, SCREEN_STATIONS.map(station => station.poster));
   const { invalidate, gl } = useThree();
+  const walkthroughLight = useMemo(() => ({ value: 0 }), []);
   const castleTone = useMemo(() => {
     const toned = cloneWithTone(castle.scene, new Color(1.45, 1.45, 1.45));
     // The isolated GLB contains an exposed underground slice. Hide that face
     // in the opening frame so the existing castle sits on the illustrated valley.
-    toned.materials.forEach(material => { material.clippingPlanes = [baseClip]; });
+    toned.materials.forEach(material => {
+      material.clippingPlanes = [baseClip];
+      // The model has baked lighting. Lift its shadow colors during the walk,
+      // while the opening still uses its original texture grading.
+      material.onBeforeCompile = shader => {
+        shader.uniforms.walkthroughLight = walkthroughLight;
+        shader.fragmentShader = shader.fragmentShader.replace("#include <common>", "#include <common>\nuniform float walkthroughLight;")
+          .replace("#include <color_fragment>", `#include <color_fragment>
+            vec3 liftedColor = sqrt(max(diffuseColor.rgb, vec3(0.0)));
+            diffuseColor.rgb = mix(diffuseColor.rgb, max(diffuseColor.rgb, liftedColor), walkthroughLight);`);
+      };
+    });
     return toned;
-  }, [castle.scene, baseClip]);
+  }, [castle.scene, baseClip, walkthroughLight]);
   const natureTone = useMemo(() => nature.map(asset => cloneWithTone(asset.scene, new Color(0.93, 0.62, 0.84))), [nature]);
   const forestModels = useMemo(() => nature.map((asset, index) => ({ ...asset, scene: natureTone[index].scene })), [nature, natureTone]);
   useEffect(() => () => castleTone.materials.forEach(material => material.dispose()), [castleTone]);
   useEffect(() => () => natureTone.forEach(asset => asset.materials.forEach(material => material.dispose())), [natureTone]);
   useMemo(() => posters.forEach(texture => { texture.colorSpace = SRGBColorSpace; texture.anisotropy = Math.min(quality === "high" ? 8 : 2, gl.capabilities.getMaxAnisotropy()); texture.needsUpdate = true; }), [gl, posters, quality]);
+  useFrame(() => {
+    const state = progressRef.current;
+    const courtyard = MathUtils.smoothstep(resolveRouteProgress(state), 0.76, 0.92);
+    walkthroughLight.value = exteriorOpacity(getIntroProgress(state)) * (0.37 + 0.09 * courtyard);
+  });
   useEffect(() => { onReady(); invalidate(); }, [invalidate, onReady]);
   return <group>
     <group position={[-0.25, -9, 0]} dispose={null}><primitive object={castleTone.scene} dispose={null} /></group>
@@ -347,8 +370,46 @@ function dampAngle(current: number, target: number, amount: number) {
   return current + Math.atan2(Math.sin(target - current), Math.cos(target - current)) * amount;
 }
 
-/** Both camera and guide follow the path itself, so damping cannot cut through a wall. */
-function TravelerRig({ progressRef, baseClip, activeBannerRef, paused }: Pick<CastleWorldProps, "progressRef" | "paused"> & { baseClip: Plane; activeBannerRef: RefObject<number | null> }) {
+const STATION_VIEWS = SCREEN_STATIONS.map((station, index) => {
+  const eye = new Vector3(...station.cameraPosition);
+  const guide = new Vector3(...getRouteSample(JOURNEY_STOPS[index + 1]).position);
+  const poster = new Vector3(...station.position);
+  const posterDirection = poster.clone().sub(eye).normalize();
+  const guideDirection = guide.clone().add(new Vector3(0, 0.98, 0)).sub(eye).normalize();
+  const forward = posterDirection.clone().lerp(guideDirection, 0.17);
+  forward.y = MathUtils.lerp(posterDirection.y, guideDirection.y, 0.38);
+  forward.normalize();
+
+  const right = new Vector3().crossVectors(forward, new Vector3(0, 1, 0)).normalize();
+  const up = new Vector3().crossVectors(right, forward);
+  const panelRight = new Vector3(Math.cos(station.rotation), 0, -Math.sin(station.rotation));
+  const framingPoints = [guide.clone().add(new Vector3(0, 1.14, 0))];
+  for (const side of [-1, 1]) {
+    for (const edge of [-1, 1]) {
+      const corner = poster.clone().addScaledVector(panelRight, side * (station.width / 2 + 0.12));
+      corner.y += edge * (station.width * 9 / 32) + (edge > 0 ? 0.2 : -0.1);
+      framingPoints.push(corner);
+    }
+  }
+  let halfWidth = 0, halfHeight = 0;
+  for (const point of framingPoints) {
+    point.sub(eye);
+    const depth = point.dot(forward);
+    halfWidth = Math.max(halfWidth, Math.abs(point.dot(right)) / depth);
+    halfHeight = Math.max(halfHeight, Math.abs(point.dot(up)) / depth);
+  }
+  return {
+    eye,
+    lift: eye.y - getCameraHeight(station.cameraPosition),
+    target: eye.clone().addScaledVector(forward, 3),
+    distance: JOURNEY_STOPS[index + 1] * ROUTE_LENGTH,
+    halfWidth,
+    halfHeight,
+  };
+});
+
+/** Follow the audited walking lane, then ease into each nearby view. */
+function TravelerRig({ progressRef, progressSignal, baseClip, activeBannerRef, paused }: Pick<CastleWorldProps, "progressRef" | "progressSignal" | "paused"> & { baseClip: Plane; activeBannerRef: RefObject<number | null> }) {
   const { camera, gl, size, invalidate } = useThree();
   const aspect = Math.max(0.35, size.width / Math.max(1, size.height));
   const mobile = aspect < 0.85;
@@ -358,33 +419,31 @@ function TravelerRig({ progressRef, baseClip, activeBannerRef, paused }: Pick<Ca
   const initialized = useRef(false), pausedRef = useRef(paused);
   const lookTarget = useMemo(() => new Vector3(), []);
   const nextLook = useMemo(() => new Vector3(), []);
-  const bannerLook = useMemo(() => new Vector3(), []);
   pausedRef.current = paused;
 
   useEffect(() => {
-    let raf = 0, previous = "";
-    const poll = () => {
-      const state = progressRef.current;
-      if (!pausedRef.current && !document.hidden) {
-        const signature = [state.index, state.previous, state.blend.toFixed(5), state.routeProgress?.toFixed(5), state.introProgress?.toFixed(5), state.jump].join(":");
-        if (signature !== previous) { previous = signature; invalidate(); }
-      }
-      raf = requestAnimationFrame(poll);
+    const wake = () => {
+      if (!pausedRef.current && !document.hidden) invalidate();
     };
-    raf = requestAnimationFrame(poll);
-    return () => cancelAnimationFrame(raf);
-  }, [invalidate, progressRef]);
+    progressSignal?.addEventListener("change", wake);
+    document.addEventListener("visibilitychange", wake);
+    wake();
+    return () => {
+      progressSignal?.removeEventListener("change", wake);
+      document.removeEventListener("visibilitychange", wake);
+    };
+  }, [invalidate, progressSignal]);
   useEffect(() => { if (!paused) invalidate(); }, [invalidate, paused, size.width, size.height]);
 
   useFrame((_, rawDelta) => {
     if (pausedRef.current || !rig.root.current) return;
-    const delta = Math.min(rawDelta, 0.05);
+    const delta = Math.min(rawDelta, 0.085);
     const state = progressRef.current;
     const wanted = resolveRouteProgress(state) * ROUTE_LENGTH;
     const snap = state.jump || !initialized.current;
     const previous = distance.current;
-    distance.current = snap ? wanted : previous + (wanted - previous) * (1 - Math.exp(-delta * 12));
-    if (Math.abs(wanted - distance.current) < 0.001) distance.current = wanted;
+    distance.current = snap ? wanted : MathUtils.damp(previous, wanted, 19, delta);
+    if (Math.abs(wanted - distance.current) < 0.008) distance.current = wanted;
     const moved = snap ? 0 : distance.current - previous;
     const progress = distance.current / ROUTE_LENGTH;
     const sample = getRouteSample(progress);
@@ -401,7 +460,7 @@ function TravelerRig({ progressRef, baseClip, activeBannerRef, paused }: Pick<Ca
     if (banner && reading > 0.4) {
       facing = dampAngle(facing, Math.atan2(banner.position[0] - sample.position[0], banner.position[2] - sample.position[2]), reading * (1 - gait.current));
     }
-    yaw.current = snap ? facing : dampAngle(yaw.current, facing, 1 - Math.exp(-delta * 11));
+    yaw.current = snap ? facing : dampAngle(yaw.current, facing, 1 - Math.exp(-delta * 16));
     rig.root.current.position.set(sample.position[0], sample.position[1] + 0.012 + Math.abs(Math.sin(phase.current)) * 0.022 * gait.current, sample.position[2]);
     rig.root.current.rotation.y = yaw.current;
     if (rig.leftLeg.current) rig.leftLeg.current.rotation.x = swing;
@@ -415,24 +474,31 @@ function TravelerRig({ progressRef, baseClip, activeBannerRef, paused }: Pick<Ca
       rig.head.current.rotation.x = -Math.min(0.48, Math.atan2(rise, reach)) * reading * (1 - gait.current);
     }
 
-    const z = sample.position[2];
-    const approach = Math.max(0, Math.min(1, (z + 5.5) / 3.5));
-    const outerArch = Math.max(0, Math.min(1, (z + 19.75) / 2.75, (-14.5 - z) / 2.5));
-    const promptBoard = Math.max(0, Math.min(1, (z + 14.3) / 2.3, (-10 - z) / 2));
-    const nexathonNear = Math.max(0, Math.min(1, (z + 11) / 2, (-7 - z) / 2));
-    const nexathonBoard = nexathonNear * nexathonNear * (3 - 2 * nexathonNear);
-    const standardFollow = mobile ? 3.5 : 3.1;
-    const followDistance = standardFollow + (2.1 - standardFollow) * Math.max(approach, promptBoard, nexathonBoard) + (2.05 - standardFollow) * outerArch;
-    const behind = getRouteSample((distance.current - followDistance) / ROUTE_LENGTH);
+    const behind = getRouteSample((distance.current - (mobile ? 3.5 : 3.1)) / ROUTE_LENGTH);
     camera.position.set(behind.position[0], behind.position[1] + getCameraHeight(behind.position), behind.position[2]);
     const rightX = -sample.tangent[2], rightZ = sample.tangent[0];
     nextLook.set(sample.position[0] + sample.tangent[0] * 1.15, sample.position[1] + (mobile ? 0.35 : 1.05), sample.position[2] + sample.tangent[2] * 1.15);
-    if (banner && reading > 0) {
-      bannerLook.set(banner.position[0], banner.position[1] - (mobile ? 0.9 : 0.6), banner.position[2]);
-      nextLook.lerp(bannerLook, reading * (mobile ? 1 : 0.9));
-    }
     nextLook.x -= rightX * (mobile ? 0 : 0.1);
     nextLook.z -= rightZ * (mobile ? 0 : 0.1);
+    let view: (typeof STATION_VIEWS)[number] | undefined;
+    let viewBlend = 0;
+    for (const candidate of STATION_VIEWS) {
+      const blend = 1 - MathUtils.smoothstep(Math.abs(distance.current - candidate.distance), 0.025, 1.24);
+      if (blend > viewBlend) { view = candidate; viewBlend = blend; }
+    }
+    let followFov = mobile ? 76 : 70;
+    if (view) {
+      camera.position.lerp(view.eye, viewBlend);
+      // Evaluate the clearance at the blended position itself. The arch's
+      // transverse beam stays above the lens even as the camera rises nearby.
+      const eyeHeight = getCameraHeight([camera.position.x, behind.position[1], camera.position.z]);
+      const liftRoom = MathUtils.smoothstep(eyeHeight, 1.45, 1.85);
+      camera.position.y = behind.position[1] + eyeHeight + view.lift * viewBlend * liftRoom;
+      nextLook.lerp(view.target, viewBlend);
+      const framing = Math.max(view.halfHeight / 0.8, view.halfWidth / (0.87 * aspect));
+      const framedFov = MathUtils.clamp(MathUtils.radToDeg(2 * Math.atan(framing)), 67, 108);
+      followFov = MathUtils.lerp(followFov, framedFov, viewBlend);
+    }
     const intro = getIntroProgress(state);
     const reveal = exteriorOpacity(intro);
     if (gl.getClearAlpha() !== reveal) gl.setClearAlpha(reveal);
@@ -447,12 +513,9 @@ function TravelerRig({ progressRef, baseClip, activeBannerRef, paused }: Pick<Ca
       nextLook.z *= arrival;
     }
     if (snap) lookTarget.copy(nextLook);
-    else lookTarget.lerp(nextLook, 1 - Math.exp(-delta * 13));
+    else lookTarget.lerp(nextLook, 1 - Math.exp(-delta * 19));
     camera.lookAt(lookTarget);
     if (camera instanceof PerspectiveCamera) {
-      const holdFov = state.index === 2 ? 96 : 88;
-      const portraitFit = Math.max(76, Math.atan(Math.tan(holdFov * Math.PI / 360) * (390 / 844) / aspect) * 360 / Math.PI);
-      const followFov = mobile ? 76 + (portraitFit - 76) * reading : 70;
       const fov = MathUtils.lerp(heroFrame.fov, followFov, arrival);
       if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
     }
@@ -482,7 +545,7 @@ class WorldErrorBoundary extends Component<{ children: ReactNode; onError?: (mes
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-export default function CastleWorld({ progressRef, quality, paused, onReady, onError, onSelectEvent }: CastleWorldProps) {
+export default function CastleWorld({ progressRef, progressSignal, quality, paused, onReady, onError, onSelectEvent }: CastleWorldProps) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const baseClip = useMemo(() => new Plane(new Vector3(0, 1, 0), 0.08), []);
   useEffect(() => {
@@ -510,7 +573,7 @@ export default function CastleWorld({ progressRef, quality, paused, onReady, onE
         <VoxelClouds />
         <SignalPath />
       </ExteriorReveal>
-      <TravelerRig progressRef={progressRef} baseClip={baseClip} activeBannerRef={activeBannerRef} paused={paused} />
+      <TravelerRig progressRef={progressRef} progressSignal={progressSignal} baseClip={baseClip} activeBannerRef={activeBannerRef} paused={paused} />
       <ContextHealth onError={onError} />
       <Suspense fallback={null}><LoadedWorld quality={quality} progressRef={progressRef} baseClip={baseClip} activeBannerRef={activeBannerRef} onReady={markReady} onSelectEvent={onSelectEvent} /></Suspense>
     </Canvas>

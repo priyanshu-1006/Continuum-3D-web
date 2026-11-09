@@ -38,6 +38,14 @@ assert.ok(html.includes('/continuum/layers/castle-opening.webp') && html.include
 assert.ok(!html.includes('Lite mode'));
 checks.push('Server-rendered home content');
 
+assert.ok(html.includes('Play tour') && html.includes('href="/explore"'));
+const explore = await fetch(new URL('/explore', base));
+assert.equal(explore.status, 200);
+const gameMarkup = await explore.text();
+assert.ok(gameMarkup.includes('Castle Relic Hunt') && gameMarkup.includes('Relics found: 0 of 5'));
+assert.ok(gameMarkup.includes('href="/"') && gameMarkup.includes('Castle tour'));
+checks.push('Home tour links to the playable castle hunt');
+
 const festival = 'https://unstop.com/college-fests/continuum-madan-mohan-malaviya-university-of-technology-mmmut-gorakhpur-524153';
 assert.ok(html.includes(festival), 'Home footer links to the official festival');
 const destinations = { sponsors: 'Choose what you', about: 'Built by students at MMMUT', contact: 'Official event resources' };
